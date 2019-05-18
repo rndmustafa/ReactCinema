@@ -9,9 +9,8 @@ import { Link } from 'react-router-dom';
 
 const style = {
   card: {
-    maxWidth: 320,
-    margin: "10px",
-    maxHeight: 700
+    width: 320,
+    margin: "10px"
   },
   media: {
     height: 450
@@ -21,25 +20,29 @@ const style = {
 function MovieCard(props) {
   const { classes, movie } = props;
 
+  const shortenSynopsis = (synopsis) => {
+    if (synopsis.length > 260) {
+      return `${synopsis.substring(0, 260)}...`;
+    }
+    return synopsis;
+  };
+
   return (
     <Card className={classes.card} key={movie.movieID}>
       <CardActionArea>
         <CardMedia
-          className={classes.media}
-          image={movie.imageUrl}
-          title={movie.title}
-          component={Link}
-          to={`/movie/${movie.movieID}`}
+            className={classes.media}
+            image={movie.imageUrl}
+            title={movie.title}
+            component={Link}
+            to={`/movie/${movie.movieID}`}
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {movie.title}
-          </Typography>
-          <Typography component="p">
-            {movie.synopsis}
-          </Typography>
-        </CardContent>
       </CardActionArea>
+      <CardContent>
+        <Typography variant="h5">{movie.title}</Typography>
+        <Typography variant="subtitle2">{movie.rating} | {movie.duration}</Typography>
+        <Typography variant="body2">{shortenSynopsis(movie.synopsis)}</Typography>
+      </CardContent>
     </Card>
   );
 }

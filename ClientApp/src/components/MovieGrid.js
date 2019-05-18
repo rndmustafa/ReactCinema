@@ -31,7 +31,7 @@ function MovieGrid(props) {
   return (
     <div className={classes.flexGridContainer}>
       <div className={classes.flexGrid}>
-        {filteredData.map(movie => <MovieCard movie={movie}/>)}
+        {filteredData.map(movie => <MovieCard key={movie.movieID} movie={movie}/>)}
       </div>
     </div>
   );
