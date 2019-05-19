@@ -10,6 +10,7 @@ namespace ReactCinema.Models
         public int MovieID { get; set; }
         public string Title { get; set; }
         public string ImageUrl { get; set; }
+        public string TrailerUrl { get; set; }
         public string Rating { get; set; }
         public string Duration { get; set; }
         public DateTime ReleaseDate { get; set; }
