@@ -6,12 +6,7 @@ const styles = {
   flexGrid: {
     display: "flex",
     flexWrap: "wrap",
-    width:"85%"
-  },
-  flexGridContainer: {
-    display: "flex",
-    justifyContent: "center",
-    width: 1200
+    justifyContent:"center"
   }
 };
 
@@ -29,10 +24,8 @@ function MovieGrid(props) {
   let filteredData = data.filter(m => m.title.toLowerCase().includes(searchFilter.toLowerCase()));
 
   return (
-    <div className={classes.flexGridContainer}>
-      <div className={classes.flexGrid}>
+    <div className={classes.flexGrid}>
         {filteredData.map(movie => <MovieCard key={movie.movieID} movie={movie}/>)}
-      </div>
     </div>
   );
 }

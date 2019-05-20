@@ -5,6 +5,8 @@ import { currentDateFormatted } from '../util/dateFormat';
 import withStyles from '@material-ui/core/styles/withStyles';
 import DateRange from '@material-ui/icons/DateRange';
 import MovieGrid from './MovieGrid';
+import Grid from '@material-ui/core/Grid';
+
 
 const styles = (theme) => ({
   flexCol: {
@@ -24,7 +26,7 @@ function Home(props) {
   const [showdate, setShowdate] = useState(currentDateFormatted());
   const [searchFilter, setSearchFilter] = useState('');
   return (
-    <div className={classes.flexCol}>
+    <div className={classes.flexCol} >
       <Typography variant="h4" style={{ marginBottom: 8 }}>What's Showing</Typography>
       <form noValidate onSubmit={e => e.preventDefault()} >
         <div className={classes.flexRow} style={{width:800}}>
