@@ -16,10 +16,19 @@ namespace ReactCinema.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Movie>()
-                .HasIndex(m => m.Title);
+            modelBuilder.Entity<Movie>().HasIndex(m => m.Title);
+            modelBuilder.Entity<RoomToExperience>().HasKey(re => new { re.RoomID, re.ExperienceID });
         }
 
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Showtime> Showtimes { get; set; }
+        public DbSet<Experience> Experiences { get; set; }
+        public DbSet<RoomToExperience> RoomToExperiences { get; set; }
+        public DbSet<Layout> Layouts { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<Row> Row { get; set; }
+        public DbSet<Seat> Seats { get; set; }
+
     }
 }
