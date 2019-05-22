@@ -5,7 +5,6 @@ import { currentDateFormatted } from '../util/dateFormat';
 import withStyles from '@material-ui/core/styles/withStyles';
 import DateRange from '@material-ui/icons/DateRange';
 import MovieGrid from './MovieGrid';
-import Grid from '@material-ui/core/Grid';
 
 
 const styles = (theme) => ({
@@ -50,7 +49,7 @@ function Home(props) {
               margin="normal"
               variant="outlined"
               InputLabelProps={{
-                shrink: true,
+                shrink: true
               }}
           />
         </div>
