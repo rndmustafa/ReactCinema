@@ -24,7 +24,7 @@ function Navbar(props) {
   const { classes, userData, auth } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   let isAuthenticated = userData.authenticated;
-
+  let isAdmin = userData.roles === "admin";
   return (
     <AppBar position="static">
       <Toolbar className={classes.bar}>
@@ -36,7 +36,7 @@ function Navbar(props) {
         <div>
           <Button color="inherit" component={Link} to="/">Home</Button>
           {
-            isAuthenticated && (<Button color="inherit" component={Link} to="/movies">Movies</Button>)
+            isAuthenticated && isAdmin && (<Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>)
           }
         </div>
         <div>

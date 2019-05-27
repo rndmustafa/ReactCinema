@@ -5,6 +5,8 @@ import Navbar from './components/Navbar';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Movie from './components/Movie';
 import Callback from './components/Callback';
+import AuthRoute from './util/AuthRoute';
+import Dashboard from './components/Dashboard/Dashboard';
 
 const theme = createMuiTheme({
   typography: {
@@ -41,8 +43,6 @@ function App(props) {
     }
   }, []);
 
-  console.log(userData);
-
   if (loading) {
     return <Callback />;
   }
@@ -53,6 +53,7 @@ function App(props) {
       <div className="container">
         <Route exact path='/' component={Home} />
         <Route path={'/movie/:id'} component={Movie} />
+        <AuthRoute path={'/dashboard'} userData={userData} component={Dashboard} />
       </div>
     </MuiThemeProvider>
   );
