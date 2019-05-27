@@ -48,8 +48,10 @@ export default class Auth {
       { headers: { Authorization: `Bearer ${accessToken}` } })
       .then(res => res.json())
       .then(data => {
-        data.roles = data[clientInfo.rolesKey];
-        delete data[clientInfo.rolesKey];
+        data.roles = data[clientInfo.claimsKey + "roles"];
+        data.permissions = data[clientInfo.claimsKey + "permissions"];
+        delete data[clientInfo.claimsKey + "roles"];
+        delete data[clientInfo.claimsKey + "permissions"];
         setUserData({ ...data, authenticated:true });
         setLoading(false);
       });

@@ -24,7 +24,8 @@ const theme = createMuiTheme({
 
 function App(props) {
   let auth = props.auth;
-  const [userData, setUserData] = useState({ authenticated:false});
+  let initialUser = { authenticated: false, roles: [], permissions: [] };
+  const [userData, setUserData] = useState(initialUser);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (/access_token|id_token|error/.test(window.location.hash)) {
@@ -38,10 +39,12 @@ function App(props) {
         auth.setUserInfo(token, setUserData, setLoading);
       }
       else {
-        setUserData({ authenticated: false });
+        setUserData(initialUser);
       }
     }
   }, []);
+
+  console.log(userData);
 
   if (loading) {
     return <Callback />;

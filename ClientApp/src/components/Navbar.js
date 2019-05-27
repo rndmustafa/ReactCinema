@@ -24,7 +24,7 @@ function Navbar(props) {
   const { classes, userData, auth } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   let isAuthenticated = userData.authenticated;
-  let isAdmin = userData.roles === "admin";
+  let isAdmin = userData.roles.includes("Admin");
   return (
     <AppBar position="static">
       <Toolbar className={classes.bar}>
