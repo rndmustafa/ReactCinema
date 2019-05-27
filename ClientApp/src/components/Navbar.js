@@ -15,7 +15,8 @@ const styles = {
 };
 
 function Navbar(props) {
-  const { classes } = props;
+  const { classes, userData, auth } = props;
+  let isAuthenticated = userData.authenticated;
   return (
     <AppBar position="static">
       <Toolbar className={classes.bar}>
@@ -26,10 +27,17 @@ function Navbar(props) {
         </div>
         <div>
           <Button color="inherit" component={Link} to="/">Home</Button>
-          <Button color="inherit" component={Link} to="/movies">Movies</Button>
+          {
+            isAuthenticated && (<Button color="inherit" component={Link} to="/movies">Movies</Button>)
+          }
         </div>
         <div>
-          <Button color="inherit" component={Link} to="/login">Login</Button>
+          {
+            !isAuthenticated && (<Button color="inherit" onClick={() => auth.login()}>Login</Button>)
+          }
+          {
+            isAuthenticated && (<Button color="inherit" onClick={() => auth.logout()}>Logout <i>{userData.email}</i></Button>)
+          }
         </div>
       </Toolbar>
     </AppBar>
