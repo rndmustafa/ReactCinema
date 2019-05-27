@@ -9,11 +9,11 @@ import { Link } from 'react-router-dom';
 
 const style = {
   card: {
-    width: 320,
+    width: 290,
     margin: "10px"
   },
   media: {
-    height: 450
+    height: 408
   }
 };
 

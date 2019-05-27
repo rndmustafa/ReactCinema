@@ -13,12 +13,19 @@ const styles = {
 function MovieGrid(props) {
   const { searchFilter, date, classes } = props;
   const [data, setData] = useState([]);
+  let isMounted = false;
   useEffect(() => {
+    isMounted = true;
     fetch('api/movie')
       .then(res => res.json())
       .then(resData => {
-        setData(resData);
+        if (isMounted) {
+          setData(resData);
+        }
       });
+    return () => {
+      isMounted = false;
+    }
   }, []);
 
   let filteredData = data.filter(m => m.title.toLowerCase().includes(searchFilter.toLowerCase()));
