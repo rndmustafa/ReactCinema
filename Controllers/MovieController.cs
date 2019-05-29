@@ -45,6 +45,7 @@ namespace ReactCinema.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize("edit:data")]
         public async Task<IActionResult> DeleteMovieAsync(int id)
         {
             Movie movie = await _context.Movies.FindAsync(id);

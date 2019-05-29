@@ -17,7 +17,7 @@ const theme = createMuiTheme({
       main: '#212121'
     },
     secondary: {
-      main:'#cfd8dc'
+      main:'#d94514'
     }
   }
 });
@@ -33,7 +33,7 @@ function App(props) {
       auth.handleAuthentication(setUserData, setLoading);
     }
     else {
-      let token = localStorage.getItem("accessToken");
+      let token = localStorage.getItem('accessToken');
       if (token && auth.isAuthenticated()) {
         setLoading(true);
         auth.setUserInfo(token, setUserData, setLoading);
@@ -44,8 +44,6 @@ function App(props) {
     }
   }, []);
 
-  console.log(userData);
-
   if (loading) {
     return <Callback />;
   }
@@ -53,7 +51,7 @@ function App(props) {
   return (
     <MuiThemeProvider theme={theme}>
       <Navbar userData={userData} auth={auth} />
-      <div className="container">
+      <div className='container'>
         <Route exact path='/' component={Home} />
         <Route path={'/movie/:id'} component={Movie} />
         <AuthRoute path={'/dashboard'} userData={userData} component={Dashboard} />
