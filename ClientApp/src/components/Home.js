@@ -9,14 +9,14 @@ import MovieGrid from './MovieGrid';
 
 const styles = (theme) => ({
   flexCol: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   flexRow: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center"
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 });
 
@@ -26,13 +26,13 @@ function Home(props) {
   const [searchFilter, setSearchFilter] = useState('');
   return (
     <div className={classes.flexCol} >
-      <Typography variant="h4" style={{ marginBottom: 8 }}>What's Showing</Typography>
+      <Typography variant='h4' style={{ marginBottom: 8 }}>What's Showing</Typography>
       <form noValidate onSubmit={e => e.preventDefault()} >
         <div className={classes.flexRow} style={{width:800}}>
-          <DateRange fontSize="large" style={{ marginRight: 8 }} />
+          <DateRange fontSize='large' style={{ marginRight: 8 }} />
           <TextField
-              id="date"
-              type="date"
+              id='date'
+              type='date'
               value={showdate}
               onChange={e => setShowdate(e.target.value)}
               InputLabelProps={{ shrink: true }}
@@ -41,13 +41,13 @@ function Home(props) {
         <hr style={{ margin: 6 }} />
         <div className={classes.flexRow}>
           <TextField
-              id="outlined-full-width"
+              id='outlined-full-width'
               style={{ margin: 8, width:500 }}
-              placeholder="Search"
+              placeholder='Search'
               value={searchFilter}
               onChange={e => setSearchFilter(e.target.value)}
-              margin="normal"
-              variant="outlined"
+              margin='normal'
+              variant='outlined'
               InputLabelProps={{
                 shrink: true
               }}

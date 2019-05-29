@@ -4,9 +4,9 @@ import MovieCard from './MovieCard';
 
 const styles = {
   flexGrid: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent:"center"
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent:'center'
   }
 };
 

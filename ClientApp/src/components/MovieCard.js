@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 const style = {
   card: {
     width: 290,
-    margin: "10px"
+    margin: '10px'
   },
   media: {
     height: 408
@@ -39,9 +39,9 @@ function MovieCard(props) {
         />
       </CardActionArea>
       <CardContent>
-        <Typography variant="h5">{movie.title}</Typography>
-        <Typography variant="subtitle2">{movie.rating} | {movie.duration}</Typography>
-        <Typography variant="body2">{shortenSynopsis(movie.synopsis)}</Typography>
+        <Typography variant='h5'>{movie.title}</Typography>
+        <Typography variant='subtitle2'>{movie.rating} | {movie.duration}</Typography>
+        <Typography variant='body2'>{shortenSynopsis(movie.synopsis)}</Typography>
       </CardContent>
     </Card>
   );
