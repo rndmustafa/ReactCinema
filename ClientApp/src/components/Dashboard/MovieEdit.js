@@ -33,10 +33,15 @@ const style = {
 function MovieEdit(props) {
   const { classes } = props;
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [fetchUrl, setFetchUrl] = useState('');
-  const handleDelete = (movieID) => {
-    setFetchUrl(`api/movie/${movieID}`);
+  const [selectedMovie, setSelectedMovie] = useState(-1);
+
+  const handleDialogOpen = (movieID) => {
+    setSelectedMovie(movieID);
     setDeleteDialog(true);
+  }
+
+  const handleDelete = () => {
+    setMovies(movies.filter(movie => movie.movieID !== selectedMovie));
   }
 
   const [movies, setMovies] = useState([]);
@@ -58,7 +63,8 @@ function MovieEdit(props) {
       <WarnDeleteDialog
         open={deleteDialog}
         setOpen={setDeleteDialog}
-        fetchUrl={fetchUrl} />
+        fetchUrl={`api/movie/${selectedMovie}`}
+        handleDelete={handleDelete} />
       {movies.map(movie => (
         <div className={classes.listBlock} key={movie.movieID}>
           <div style={{display:"flex"}}>
@@ -67,7 +73,7 @@ function MovieEdit(props) {
           </div>
           <div>
             <EditIcon style={{cursor:"pointer"}} />
-            <ClearIcon onClick={() => handleDelete(movie.movieID)} style={{ cursor: "pointer" }} />
+            <ClearIcon onClick={() => handleDialogOpen(movie.movieID)} style={{ cursor: "pointer" }} />
           </div>
         </div>
       ))}

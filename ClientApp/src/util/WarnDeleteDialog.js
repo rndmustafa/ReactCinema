@@ -8,10 +8,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 function WarnDeleteDialog(props) {
-  const { open, setOpen, fetchUrl } = props;
+  const { open, setOpen, fetchUrl, handleDelete } = props;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-
   const token = localStorage.getItem("accessToken");
   const handleAgree = () => {
     setLoading(true);
@@ -25,9 +24,10 @@ function WarnDeleteDialog(props) {
           setError(true);
         }
         else {
+          handleDelete();
           setOpen(false);
         }
-      })
+      });
   }
 
   const handleClose = () => {
@@ -53,6 +53,7 @@ function WarnDeleteDialog(props) {
               There was an error deleting this item, please try again later.
           </DialogContentText>  
           )}
+          {loading && (<div style={{ display: "flex", justifyContent: "center" }}><CircularProgress /></div>)}
         </DialogContent>
         <DialogActions>
           {!loading && (
@@ -63,8 +64,7 @@ function WarnDeleteDialog(props) {
               <Button onClick={handleAgree} color="primary" autoFocus>
                 Yes
             </Button>
-          </div> )}
-          {loading && (<CircularProgress />)}
+            </div>)}
         </DialogActions>
       </Dialog>
     </div>
