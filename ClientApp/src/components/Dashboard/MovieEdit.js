@@ -7,6 +7,8 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import ClearIcon from '@material-ui/icons/Clear';
 import WarnDeleteDialog from '../../util/WarnDeleteDialog';
+import FormDialog from '../../util/FormDialog';
+import MovieForm from './MovieForm';
 
 const style = {
   titleSection: {
@@ -33,15 +35,12 @@ const style = {
 function MovieEdit(props) {
   const { classes } = props;
   const [deleteDialog, setDeleteDialog] = useState(false);
+  const [formDialog, setFormDialog] = useState(false)
   const [selectedMovie, setSelectedMovie] = useState(-1);
 
   const handleDialogOpen = (movieID) => {
     setSelectedMovie(movieID);
     setDeleteDialog(true);
-  }
-
-  const handleDelete = () => {
-    setMovies(movies.filter(movie => movie.movieID !== selectedMovie));
   }
 
   const [movies, setMovies] = useState([]);
@@ -53,11 +52,21 @@ function MovieEdit(props) {
       });
   }, []);
 
+  const handleDelete = () => {
+    setMovies(movies.filter(movie => movie.movieID !== selectedMovie));
+  }
+
+  const handleMovieAdd = (newMovie) => {
+    setMovies(movies.concat(newMovie));
+  }
+
   return (
     <div>
       <div className={classes.titleSection}>
         <Typography variant="h4">Movies</Typography>
-        <Button variant="contained" color="secondary"><AddIcon />Add Movie</Button>
+        <Button variant="contained" color="secondary" onClick={() => setFormDialog(true)}>
+          <AddIcon />Add Movie
+        </Button>
       </div>
       <Typography variant="subtitle1" style={{ marginBottom: 10 }}>Add, edit, or delete movies.</Typography>
       <WarnDeleteDialog
@@ -65,6 +74,12 @@ function MovieEdit(props) {
         setOpen={setDeleteDialog}
         fetchUrl={`api/movie/${selectedMovie}`}
         handleDelete={handleDelete} />
+      <FormDialog
+        open={formDialog}
+        setOpen={setFormDialog}
+        itemName={'Movie'}
+        component={MovieForm}
+        handleItemAdd={handleMovieAdd} />
       {movies.map(movie => (
         <div className={classes.listBlock} key={movie.movieID}>
           <div style={{display:"flex"}}>
