@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import { currentDateFormatted } from '../util/dateFormat';
 import withStyles from '@material-ui/core/styles/withStyles';
 import DateRange from '@material-ui/icons/DateRange';
 import MovieGrid from './MovieGrid';
+import moment from 'moment';
 
 
 const styles = (theme) => ({
@@ -22,7 +22,7 @@ const styles = (theme) => ({
 
 function Home(props) {
   const { classes } = props;
-  const [showdate, setShowdate] = useState(currentDateFormatted());
+  const [showdate, setShowdate] = useState(moment().format('YYYY-MM-DD'));
   const [searchFilter, setSearchFilter] = useState('');
   return (
     <div className={classes.flexCol} >
