@@ -24,7 +24,7 @@ namespace ReactCinema.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMoviesAsync()
         {
-            List<Movie> movies = await _context.Movies.Where(m => m.Active == true).ToListAsync();
+            List<Movie> movies = await _context.Movies.ToListAsync();
             return Ok(movies);
         }
 
@@ -39,9 +39,13 @@ namespace ReactCinema.Controllers
         [Authorize("edit:data")]
         public async Task<IActionResult> PostMovieAsync([FromBody] Movie newMovie)
         {
-            _context.Movies.Add(newMovie);
-            await _context.SaveChangesAsync();
-            return CreatedAtRoute("GetMovie", new { id = newMovie.MovieID }, newMovie);
+            if(newMovie != null)
+            {
+                _context.Movies.Add(newMovie);
+                await _context.SaveChangesAsync();
+                return CreatedAtRoute("GetMovie", new { id = newMovie.MovieID }, newMovie);
+            }
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]

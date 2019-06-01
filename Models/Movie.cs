@@ -15,7 +15,6 @@ namespace ReactCinema.Models
         public string Duration { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Synopsis { get; set; }
-        public bool Active { get; set; }
 
         public virtual ICollection<Showtime> Showtimes { get; set; }
     }
