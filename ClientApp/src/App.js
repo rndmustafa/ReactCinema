@@ -50,7 +50,7 @@ function App(props) {
 
   return (
     <MuiThemeProvider theme={theme}>
-      <Navbar userData={userData} auth={auth} />
+      <Navbar userData={userData} auth={auth} setUserData={setUserData} setLoading={setLoading} />
       <div className='container'>
         <Route exact path='/' component={Home} />
         <Route path={'/movie/:id'} component={Movie} />

@@ -21,7 +21,7 @@ const styles = {
 };
 
 function Navbar(props) {
-  const { classes, userData, auth } = props;
+  const { classes, userData, auth, setUserData, setLoading } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   let isAuthenticated = userData.authenticated;
   let isAdmin = userData.roles.includes("Admin");
@@ -54,7 +54,7 @@ function Navbar(props) {
                 {userData.email}
               </Button>
                 <Menu id="simple-menu" className={classes.menu} anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
-                <MenuItem onClick={() => auth.logout()}>Logout</MenuItem>
+                  <MenuItem onClick={() => auth.logout(setUserData,setLoading)}>Logout</MenuItem>
               </Menu>
               </div>
             )
