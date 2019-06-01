@@ -1,9 +1,9 @@
 ﻿import auth0 from 'auth0-js';
-import clientInfo from './clientInfo';
+import { auth0Settings, claimsKey } from './clientInfo';
 import history from './history';
 
 export default class Auth {
-  auth0 = new auth0.WebAuth(clientInfo);
+  auth0 = new auth0.WebAuth(auth0Settings);
 
   constructor() { 
     this.login = this.login.bind(this);
@@ -44,14 +44,14 @@ export default class Auth {
   }
 
   setUserInfo(accessToken, setUserData, setLoading) {
-    fetch(`https://${clientInfo.domain}/userinfo`,
+    fetch(`https://${auth0Settings.domain}/userinfo`,
       { headers: { Authorization: `Bearer ${accessToken}` } })
       .then(res => res.json())
       .then(data => {
-        data.roles = data[clientInfo.claimsKey + 'roles'];
-        data.permissions = data[clientInfo.claimsKey + 'permissions'];
-        delete data[clientInfo.claimsKey + 'roles'];
-        delete data[clientInfo.claimsKey + 'permissions'];
+        data.roles = data[claimsKey + 'roles'];
+        data.permissions = data[claimsKey + 'permissions'];
+        delete data[claimsKey + 'roles'];
+        delete data[claimsKey + 'permissions'];
         setUserData({ ...data, authenticated:true });
         setLoading(false);
       });
