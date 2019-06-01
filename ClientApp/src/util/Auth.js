@@ -57,20 +57,22 @@ export default class Auth {
       });
   }
 
-  renewSession() {
-    this.auth0.checkSession({}, (err, authResult) => {
+  renewSession(setUserData, setLoading) {
+    console.log('renewsession');
+    this.auth0.checkSession(auth0Settings, (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         console.log('renewing session');
-        this.setSession(authResult);
-      } else if (err) {
-        this.logout();
+        this.setSession(authResult, setUserData, setLoading);
+      }
+      else if (err) {
+        this.logout(setUserData, setLoading);
         console.log(err);
         alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
       }
     });
   }
 
-  logout() {
+  logout(setUserData, setLoading) {
     // Remove tokens and expiry time
     localStorage.removeItem('accessToken');
     localStorage.removeItem('idToken');
@@ -83,7 +85,8 @@ export default class Auth {
       returnTo: window.location.origin
     });
 
-    // navigate to the home route
+    setUserData({ authenticated: false, roles: [], permissions: [] });
+    setLoading(false);
     history.replace('/');
   }
 

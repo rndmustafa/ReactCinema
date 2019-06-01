@@ -26,20 +26,20 @@ function App(props) {
   let auth = props.auth;
   let initialUser = { authenticated: false, roles: [], permissions: [] };
   const [userData, setUserData] = useState(initialUser);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (/access_token|id_token|error/.test(window.location.hash)) {
-      setLoading(true);
       auth.handleAuthentication(setUserData, setLoading);
     }
     else {
       let token = localStorage.getItem('accessToken');
       if (token && auth.isAuthenticated()) {
-        setLoading(true);
         auth.setUserInfo(token, setUserData, setLoading);
       }
       else {
         setUserData(initialUser);
+        setLoading(false);
       }
     }
   }, []);
