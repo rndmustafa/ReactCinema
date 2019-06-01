@@ -1,8 +1,8 @@
 ﻿import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Route, Link } from 'react-router-dom';
-import MovieEdit from './MovieEdit';
-import RoomEdit from './RoomEdit';
+import MovieList from './MovieList';
+import RoomList from './RoomList';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -53,8 +53,8 @@ function Dashboard(props) {
               </Typography>
               </div>);
             }} />
-          <Route path={`${match.path}/movies`} component={MovieEdit} />
-          <Route path={`${match.path}/rooms`} component={RoomEdit} />
+          <Route path={`${match.path}/movies`} component={MovieList} />
+          <Route path={`${match.path}/rooms`} component={RoomList} />
         </Grid>
       </Grid>
     </div>

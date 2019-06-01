@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-function Callback(props) {
+function Loading(props) {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems:'center' }}>
       <CircularProgress />
@@ -9,4 +9,4 @@ function Callback(props) {
   );
 }
 
-export default Callback;
+export default Loading;

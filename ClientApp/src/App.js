@@ -1,10 +1,10 @@
 import React, { useState,useEffect } from 'react';
 import { Route } from 'react-router';
-import Home from './components/Home';
-import Navbar from './components/Navbar';
+import Home from './components/Home/Home';
+import Navbar from './components/Home/Navbar';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Movie from './components/Movie';
-import Callback from './components/Callback';
+import Movie from './components/MovieDetail/Movie';
+import Loading from './util/Loading';
 import AuthRoute from './util/AuthRoute';
 import Dashboard from './components/Dashboard/Dashboard';
 
@@ -45,7 +45,7 @@ function App(props) {
   }, []);
 
   if (loading) {
-    return <Callback />;
+    return <Loading />;
   }
 
   return (

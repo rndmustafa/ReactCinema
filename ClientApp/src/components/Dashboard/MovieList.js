@@ -32,7 +32,7 @@ const style = {
   }
 };
 
-function MovieEdit(props) {
+function MovieList(props) {
   const { classes } = props;
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [formDialog, setFormDialog] = useState(false)
@@ -96,4 +96,4 @@ function MovieEdit(props) {
   );
 }
 
-export default withStyles(style)(MovieEdit);
+export default withStyles(style)(MovieList);

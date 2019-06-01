@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 
-function RoomEdit(props) {
+function RoomList(props) {
   return <p>Room edit</p>;
 }
 
-export default RoomEdit;
+export default RoomList;
