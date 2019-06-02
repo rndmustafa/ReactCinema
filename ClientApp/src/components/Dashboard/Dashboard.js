@@ -2,6 +2,7 @@
 import { withStyles } from '@material-ui/core/styles';
 import { Route, Link } from 'react-router-dom';
 import MovieList from './MovieList';
+import MovieEdit from './MovieEdit';
 import RoomList from './RoomList';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -53,7 +54,8 @@ function Dashboard(props) {
               </Typography>
               </div>);
             }} />
-          <Route path={`${match.path}/movies`} component={MovieList} />
+          <Route exact path={`${match.path}/movies`} component={MovieList} />
+          <Route path={`${match.path}/movies/:movieID`} component={MovieEdit} />
           <Route path={`${match.path}/rooms`} component={RoomList} />
         </Grid>
       </Grid>

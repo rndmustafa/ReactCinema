@@ -4,9 +4,11 @@ import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import getMovieData from '../../util/getMovieData';
+import moment from 'moment';
 
 function MovieForm(props) {
-  const { createMode, setOpen, handleItemAdd } = props;
+  const { createMode, movieData, setOpen, handleItemAdd } = props;
+  let token = localStorage.getItem('accessToken');
 
   const [title, setTitle] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -15,20 +17,39 @@ function MovieForm(props) {
   const [duration, setDuration] = useState('');
   const [releaseDate, setReleaseDate] = useState('');
   const [synopsis, setSynopsis] = useState('');
-  let token = localStorage.getItem('accessToken');
 
   const [loading, setLoading] = useState(false);
   const [movieFetchLoading, setMovieFetchLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const handleCreate = (event) => {
-    event.preventDefault();
+  const handleMovieData = (data, fromProp) => {
+    if (!data.Error) {
+      setTitle(data.title);
+      setImageUrl(data.imageUrl);
+      setRating(data.rating);
+      setDuration(data.duration);
+      setReleaseDate(data.releaseDate);
+      setSynopsis(data.synopsis);
+      setTrailerUrl(data.trailerUrl);
+    }
+    if (!fromProp) {
+      setMovieFetchLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (movieData) {
+      movieData.releaseDate = moment(movieData.releaseDate).format('YYYY-MM-DD');
+      handleMovieData(movieData, true);
+    }
+  }, []);
+
+  const handleCreate = () => {
     setLoading(true);
     let data = {
       title, imageUrl, trailerUrl, rating,
       duration, releaseDate, synopsis
     };
-    console.log(data);
     let requestInit = {
       method: 'POST',
       headers: {
@@ -61,17 +82,41 @@ function MovieForm(props) {
       });
   };
 
-  const handleMovieData = (movieData) => {
-    if (!movieData.Error) {
-      setTitle(movieData.title);
-      setImageUrl(movieData.imageUrl);
-      setRating(movieData.rating);
-      setDuration(movieData.duration);
-      setReleaseDate(movieData.releaseDate);
-      setSynopsis(movieData.synopsis);
-    }
-    setMovieFetchLoading(false);
+  const handleUpdate = () => {
+    setLoading(true);
+    let data = {
+      movieID: movieData.movieID,
+      title, imageUrl, trailerUrl, rating,
+      duration, releaseDate, synopsis
+    };
+    let requestInit = {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+
+    fetch(`api/movie/${movieData.movieID}`, requestInit)
+      .then(res => {
+        setLoading(false);
+        if (res.status === 400) {
+          setError(true);
+        }
+      });
   };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (createMode) {
+      handleCreate();
+    }
+    else {
+      handleUpdate();
+    }
+  }
 
   const handleDataClick = () => {
     setMovieFetchLoading(true);
@@ -79,7 +124,7 @@ function MovieForm(props) {
   };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e) => handleCreate(e)}>
+    <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e) => handleSubmit(e)}>
       <TextField
         required
         id='title'
@@ -156,7 +201,7 @@ function MovieForm(props) {
       )}
       {!loading && (
         <Button color="secondary" variant="contained" type="submit">
-          Create Movie
+          Save
         </Button>
       )}
       {loading && (

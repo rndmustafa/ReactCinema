@@ -48,6 +48,21 @@ namespace ReactCinema.Controllers
             return BadRequest();
         }
 
+        [HttpPut("{id}")]
+        [Authorize("edit:data")]
+        public async Task<IActionResult> PutMovieAsync(long id, [FromBody] Movie movie)
+        {
+            if (id != movie.MovieID)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(movie).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         [Authorize("edit:data")]
         public async Task<IActionResult> DeleteMovieAsync(int id)

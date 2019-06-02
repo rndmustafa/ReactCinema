@@ -18,7 +18,7 @@ export default function getMovieData(movieTitle, handleMovieData) {
       else {
         data = resData;
       }
-      handleMovieData(data);
+      handleMovieData(data, false);
     });
 }
 
@@ -26,6 +26,7 @@ function parseData(resData) {
   return {
     title: resData.Title,
     imageUrl: resData.Poster,
+    trailerUrl: '',
     rating: resData.Rated,
     duration: formatDuration(resData.Runtime),
     releaseDate: moment(resData.Released,'DD MMM YYYY').format('YYYY-MM-DD'),
