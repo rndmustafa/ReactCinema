@@ -1,7 +1,8 @@
-﻿import React, { useState, useEffect} from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -19,7 +20,7 @@ const style = {
     borderTop: "1px solid rgb(221,221,221)",
     display: "flex",
     justifyContent: "space-between",
-    padding: "16px 8px",
+    padding: "8px 8px",
     '&:hover': {
       backgroundColor: "rgb(221,221,221)"
     },
@@ -82,13 +83,22 @@ function MovieList(props) {
         handleItemAdd={handleMovieAdd} />
       {movies.map(movie => (
         <div className={classes.listBlock} key={movie.movieID}>
-          <div style={{display:"flex"}}>
-            <img src={movie.imageUrl} className={classes.img} />
-            <Typography variant="h6">{movie.title}</Typography>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <Typography
+              style={{ textDecoration: 'none' }}
+              variant="h6"
+              component={Link}
+              to={`${props.match.url}/${movie.movieID}`}>
+              {movie.title}
+            </Typography>
           </div>
           <div>
-            <EditIcon style={{cursor:"pointer"}} />
-            <ClearIcon onClick={() => handleDialogOpen(movie.movieID)} style={{ cursor: "pointer" }} />
+            <IconButton component={Link} to={`${props.match.url}/${movie.movieID}`}>
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => handleDialogOpen(movie.movieID)}>
+              <ClearIcon />
+            </IconButton>
           </div>
         </div>
       ))}
