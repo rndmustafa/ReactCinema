@@ -22,7 +22,7 @@ function MovieForm(props) {
   const [movieFetchLoading, setMovieFetchLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const handleMovieData = (data, fromProp) => {
+  const handleMovieData = (data) => {
     if (!data.Error) {
       setTitle(data.title);
       setImageUrl(data.imageUrl);
@@ -32,15 +32,12 @@ function MovieForm(props) {
       setSynopsis(data.synopsis);
       setTrailerUrl(data.trailerUrl);
     }
-    if (!fromProp) {
-      setMovieFetchLoading(false);
-    }
   };
 
   useEffect(() => {
     if (movieData) {
       movieData.releaseDate = moment(movieData.releaseDate).format('YYYY-MM-DD');
-      handleMovieData(movieData, true);
+      handleMovieData(movieData);
     }
   }, []);
 
@@ -116,11 +113,19 @@ function MovieForm(props) {
     else {
       handleUpdate();
     }
-  }
+  };
 
   const handleDataClick = () => {
     setMovieFetchLoading(true);
-    getMovieData(title, handleMovieData);
+    getMovieData(title)
+      .then(data => {
+        handleMovieData(data);
+        setMovieFetchLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setMovieFetchLoading(false);
+      });
   };
 
   return (

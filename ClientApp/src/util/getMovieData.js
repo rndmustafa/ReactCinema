@@ -1,25 +1,27 @@
 ﻿import { omdbKey } from './clientInfo';
 import moment from 'moment';
 
-export default function getMovieData(movieTitle, handleMovieData) {
-  let data = {};
-
-  fetch(`https://www.omdbapi.com/?apikey=${omdbKey}&t=${movieTitle}&type=movie&plot=full`)
-    .then(res => {
-      if (res.status === 200) {
-        return res.json();
-      }
-      return {Error: 'bad request'};
-    })
-    .then(resData => {
-      if (!resData.Error) {
-        data = parseData(resData);
-      }
-      else {
-        data = resData;
-      }
-      handleMovieData(data, false);
-    });
+export default function getMovieData(movieTitle) {
+  return new Promise((resolve, reject) => {
+    fetch(`https://www.omdbapi.com/?apikey=${omdbKey}&t=${movieTitle}&type=movie&plot=full`)
+      .then(res => {
+        if (res.status === 200) {
+          return res.json();
+        }
+        else {
+          throw new Error({ Error: 'bad request' });
+        }
+      })
+      .then(resData => {
+        if (!resData.Error) {
+          resolve(parseData(resData));
+        }
+        else {
+          reject(resData);
+        }
+      })
+      .catch(err => reject(err));
+  });
 }
 
 function parseData(resData) {
