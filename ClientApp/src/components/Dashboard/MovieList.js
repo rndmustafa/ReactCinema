@@ -11,27 +11,13 @@ import WarnDeleteDialog from '../../util/WarnDeleteDialog';
 import FormDialog from '../../util/FormDialog';
 import MovieForm from './MovieForm';
 
-const style = {
+const style = (theme) => ({
   titleSection: {
     display: "flex",
     justifyContent:"space-between"
   },
-  listBlock: {
-    borderTop: "1px solid rgb(221,221,221)",
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "8px 8px",
-    '&:hover': {
-      backgroundColor: "rgb(221,221,221)"
-    },
-    transition:"background-color 0.35s"
-  },
-  img: {
-    height: 64,
-    width: 64,
-    marginRight: 10
-  }
-};
+  listBlock: theme.listBlock
+});
 
 function MovieList(props) {
   const { classes } = props;

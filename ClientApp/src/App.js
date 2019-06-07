@@ -19,6 +19,16 @@ const theme = createMuiTheme({
     secondary: {
       main:'#d94514'
     }
+  },
+  listBlock: {
+    borderTop: "1px solid rgb(221,221,221)",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "8px 8px",
+    '&:hover': {
+      backgroundColor: "rgb(221,221,221)"
+    },
+    transition: "background-color 0.35s"
   }
 });
 
