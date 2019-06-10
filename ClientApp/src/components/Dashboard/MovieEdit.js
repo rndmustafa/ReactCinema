@@ -55,7 +55,7 @@ function MovieEdit(props) {
       {loading && <CircularProgress/>}
       {value === 0 && !loading && (
         <div style={{ maxWidth: 300 }}>
-          <MovieForm movieData={movie} createMode={false} />
+          <MovieForm movieData={movie} createMode={false} handleItemUpdate={setMovie} />
         </div> )}
     </div>
   );

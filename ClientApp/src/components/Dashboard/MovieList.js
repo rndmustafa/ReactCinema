@@ -22,13 +22,13 @@ const style = (theme) => ({
 function MovieList(props) {
   const { classes } = props;
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [formDialog, setFormDialog] = useState(false)
+  const [formDialog, setFormDialog] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(-1);
 
   const handleDialogOpen = (movieID) => {
     setSelectedMovie(movieID);
     setDeleteDialog(true);
-  }
+  };
 
   const [movies, setMovies] = useState([]);
   useEffect(() => {
@@ -41,11 +41,11 @@ function MovieList(props) {
 
   const handleDelete = () => {
     setMovies(movies.filter(movie => movie.movieID !== selectedMovie));
-  }
+  };
 
   const handleMovieAdd = (newMovie) => {
     setMovies(movies.concat(newMovie));
-  }
+  };
 
   return (
     <div>
@@ -64,9 +64,9 @@ function MovieList(props) {
       <FormDialog
         open={formDialog}
         setOpen={setFormDialog}
-        itemName={'Movie'}
         component={MovieForm}
-        handleItemAdd={handleMovieAdd} />
+        handleItemAdd={handleMovieAdd}
+        createMode={true} />
       {movies.map(movie => (
         <div className={classes.listBlock} key={movie.movieID}>
           <div style={{ display: "flex", flexDirection: "column" }}>

@@ -7,7 +7,7 @@ import getMovieData from '../../util/getMovieData';
 import moment from 'moment';
 
 function MovieForm(props) {
-  const { createMode, movieData, setOpen, handleItemAdd } = props;
+  const { createMode, movieData, setOpen, handleItemAdd, handleItemUpdate } = props;
   let token = localStorage.getItem('accessToken');
 
   const [title, setTitle] = useState('');
@@ -35,7 +35,7 @@ function MovieForm(props) {
   };
 
   useEffect(() => {
-    if (movieData) {
+    if (!createMode && movieData) {
       movieData.releaseDate = moment(movieData.releaseDate).format('YYYY-MM-DD');
       handleMovieData(movieData);
     }
@@ -69,7 +69,7 @@ function MovieForm(props) {
         }
       })
       .then(data => {
-        if (setOpen) {
+        if (createMode && setOpen) {
           handleItemAdd(data);
           setOpen(false);
         }
@@ -101,6 +101,9 @@ function MovieForm(props) {
         setLoading(false);
         if (res.status === 400) {
           setError(true);
+        }
+        else {
+          handleItemUpdate(data);
         }
       });
   };
