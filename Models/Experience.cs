@@ -7,7 +7,8 @@ namespace ReactCinema.Models
 {
     public class Experience
     {
-        public string ExperienceID { get; set; }
+        public int ExperienceID { get; set; }
+        public string Title { get; set; }
 
         public virtual ICollection<RoomToExperience> RoomToExperiences { get; set; }
         public virtual ICollection<Showtime> Showtimes { get; set; }
