@@ -28,12 +28,12 @@ function WarnDeleteDialog(props) {
           setOpen(false);
         }
       });
-  }
+  };
 
   const handleClose = () => {
     setOpen(false);
     setError(false);
-  }
+  };
 
   return (
     <div>
