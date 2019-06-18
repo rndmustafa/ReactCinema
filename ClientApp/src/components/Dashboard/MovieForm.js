@@ -213,7 +213,7 @@ function MovieForm(props) {
         </Button>
       )}
       {loading && (
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ display: "flex", justifyContent: "center", marginTop:10 }}>
         <CircularProgress />
       </div>)}
     </form>
