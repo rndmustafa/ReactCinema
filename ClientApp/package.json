@@ -11,7 +11,8 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
     "react-scripts": "1.0.17",
-    "rimraf": "^2.6.3"
+    "rimraf": "^2.6.3",
+    "shortid": "^2.2.14"
   },
   "scripts": {
     "start": "rimraf ./build && react-scripts start",
