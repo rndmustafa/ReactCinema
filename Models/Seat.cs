@@ -11,7 +11,7 @@ namespace ReactCinema.Models
         public int RowID { get; set; }
         public int XPos { get; set; }
         public string Label { get; set; }
-        public int ReservationID { get; set; }
+        public int? ReservationID { get; set; }
 
         public virtual Reservation Reservation { get; set; }
         public virtual Row Row { get; set; }
