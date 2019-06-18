@@ -8,16 +8,18 @@ namespace ReactCinema.Models
     public class Showtime
     {
         public int ShowtimeID { get; set; }
-        public int MovieID { get; set; }
+        public int? MovieID { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public int RoomID { get; set; }
+        public int? RoomID { get; set; }
         public bool Soldout { get; set; }
-        public int ExperienceID { get; set; }
+        public int? ExperienceID { get; set; }
+        public int ShowtimeGroupEntryID { get; set; }
 
         public virtual Movie Movie { get; set; }
         public virtual Room Room { get; set; }
         public virtual Experience Experience { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
+        public virtual ShowtimeGroupEntry ShowtimeGroupEntry { get; set; }
     }
 }

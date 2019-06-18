@@ -17,5 +17,6 @@ namespace ReactCinema.Models
         public string Synopsis { get; set; }
 
         public virtual ICollection<Showtime> Showtimes { get; set; }
+        public virtual ICollection<ShowtimeGroup> ShowtimeGroups { get; set; }
     }
 }

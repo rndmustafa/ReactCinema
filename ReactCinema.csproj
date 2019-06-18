@@ -25,6 +25,18 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190518024919_InitialMovie.cs" />
     <Compile Remove="Migrations\20190518024919_InitialMovie.Designer.cs" />
+    <Compile Remove="Migrations\20190616182335_ShowtimeGroups.cs" />
+    <Compile Remove="Migrations\20190616182335_ShowtimeGroups.Designer.cs" />
+    <Compile Remove="Migrations\20190616184138_ShowtimeGroups.cs" />
+    <Compile Remove="Migrations\20190616184138_ShowtimeGroups.Designer.cs" />
+    <Compile Remove="Migrations\20190616194455_ShowtimeGroups.cs" />
+    <Compile Remove="Migrations\20190616194455_ShowtimeGroups.Designer.cs" />
+    <Compile Remove="Migrations\20190616200506_ShowtimeGroups.cs" />
+    <Compile Remove="Migrations\20190616200506_ShowtimeGroups.Designer.cs" />
+    <Compile Remove="Migrations\20190616202039_ShowtimeGroups.cs" />
+    <Compile Remove="Migrations\20190616202039_ShowtimeGroups.Designer.cs" />
+    <Compile Remove="Migrations\20190616203140_ShowtimeGroups.cs" />
+    <Compile Remove="Migrations\20190616203140_ShowtimeGroups.Designer.cs" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

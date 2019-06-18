@@ -18,10 +18,17 @@ namespace ReactCinema.Data
         {
             modelBuilder.Entity<Movie>().HasIndex(m => m.Title);
             modelBuilder.Entity<RoomToExperience>().HasKey(re => new { re.RoomID, re.ExperienceID });
+
+            modelBuilder.Entity<Seat>()
+                .HasOne(s => s.Row)
+                .WithMany(r => r.Seats)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Showtime> Showtimes { get; set; }
+        public DbSet<ShowtimeGroup> ShowtimeGroups { get; set; }
+        public DbSet<ShowtimeGroupEntry> ShowtimeGroupEntries { get; set; }
         public DbSet<Experience> Experiences { get; set; }
         public DbSet<RoomToExperience> RoomToExperiences { get; set; }
         public DbSet<Layout> Layouts { get; set; }
