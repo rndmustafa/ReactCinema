@@ -8,6 +8,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ShowtimeList from './ShowtimeList';
 
 const style = {
   flexRow: {
@@ -56,7 +57,11 @@ function MovieEdit(props) {
       {value === 0 && !loading && (
         <div style={{ maxWidth: 300 }}>
           <MovieForm movieData={movie} createMode={false} handleItemUpdate={setMovie} />
-        </div> )}
+        </div>)}
+      {value === 1 && !loading && (
+        <div style={{ maxWidth: 300 }}>
+          <ShowtimeList movieID={movieID} />
+        </div>)}
     </div>
   );
 }

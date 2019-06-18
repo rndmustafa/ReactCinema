@@ -76,5 +76,43 @@ namespace ReactCinema.Controllers
             }
             return NotFound();
         }
+
+        [HttpGet("{id}/showtimegroups")]
+        public async Task<IActionResult> GetShowtimeGroupsAsync(int id)
+        {
+            List<ShowtimeGroup> showtimeGroups = await _context
+                .ShowtimeGroups
+                .Where(s => s.MovieID == id)
+                .OrderByDescending(s => s.FromDate)
+                .ToListAsync();
+
+            return Ok(showtimeGroups);
+        }
+
+        [HttpGet("showtimegroups/{id}", Name = "GetShowtimeGroup")]
+        public async Task<IActionResult> GetShowtimeGroupAsync(int id)
+        {
+            ShowtimeGroup showtimeGroup = await _context
+                .ShowtimeGroups
+                .Where(s => s.ShowtimeGroupID == id)
+                .Include(s => s.ShowtimeGroupEntries)
+                .ThenInclude(e => e.Room)
+                .FirstAsync();
+
+            return Ok(showtimeGroup);
+        }
+
+        [HttpPost("{id}/showtimegroups")]
+        [Authorize("edit:data")]
+        public async Task<IActionResult> PostMovieShowtimesAsync(int id, [FromBody] ShowtimeGroup showtimeGroup)
+        {
+            if (showtimeGroup != null)
+            {
+                _context.ShowtimeGroups.Add(showtimeGroup);
+                await _context.SaveChangesAsync();
+                return CreatedAtRoute("GetShowtimeGroup", new { id = showtimeGroup.ShowtimeGroupID }, showtimeGroup);
+            }
+            return BadRequest();
+        }
     }
 }
