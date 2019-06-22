@@ -37,9 +37,5 @@ function parseData(resData) {
 }
 
 function formatDuration(runtime) {
-  let totalMinutes = parseInt(runtime.split(' ')[0], 10);
-  let hours = Math.floor(totalMinutes / 60);
-  let minutes = totalMinutes % 60;
-
-  return `${hours}h ${minutes}m`;
+  return parseInt(runtime.split(' ')[0], 10);
 }

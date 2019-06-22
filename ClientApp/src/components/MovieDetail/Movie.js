@@ -50,7 +50,7 @@ function Movie(props) {
               <Typography variant='body2' inline> {movie.rating}</Typography>
             </Typography>
             <Typography variant='subtitle2' gutterBottom>Duration:
-              <Typography variant='body2' inline> {movie.duration}</Typography>
+              <Typography variant='body2' inline> {movie.duration}m</Typography>
             </Typography>
             <Typography variant='subtitle2' gutterBottom>Synopsis:
               <Typography variant='body2' inline> {movie.synopsis}</Typography>

@@ -14,7 +14,7 @@ function MovieForm(props) {
   const [imageUrl, setImageUrl] = useState('');
   const [trailerUrl, setTrailerUrl] = useState('');
   const [rating, setRating] = useState('');
-  const [duration, setDuration] = useState('');
+  const [duration, setDuration] = useState(0);
   const [releaseDate, setReleaseDate] = useState('');
   const [synopsis, setSynopsis] = useState('');
 
@@ -173,11 +173,11 @@ function MovieForm(props) {
       <TextField
         required
         id='duration'
-        label='Duration'
+        label='Duration (minutes)'
         value={duration}
         onChange={(e) => setDuration(e.target.value)}
         margin='normal'
-        placeholder='2h 10m'
+        placeholder='90'
         variant='outlined' />
       <TextField
         required

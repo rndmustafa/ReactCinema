@@ -31,16 +31,16 @@ function MovieCard(props) {
     <Card className={classes.card} key={movie.movieID}>
       <CardActionArea>
         <CardMedia
-            className={classes.media}
-            image={movie.imageUrl}
-            title={movie.title}
-            component={Link}
-            to={`/movie/${movie.movieID}`}
+          className={classes.media}
+          image={movie.imageUrl}
+          title={movie.title}
+          component={Link}
+          to={`/movie/${movie.movieID}`}
         />
       </CardActionArea>
       <CardContent>
         <Typography variant='h5'>{movie.title}</Typography>
-        <Typography variant='subtitle2'>{movie.rating} | {movie.duration}</Typography>
+        <Typography variant='subtitle2'>{movie.rating} | {movie.duration}m</Typography>
         <Typography variant='body2'>{shortenSynopsis(movie.synopsis)}</Typography>
       </CardContent>
     </Card>

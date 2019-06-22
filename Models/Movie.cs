@@ -12,7 +12,7 @@ namespace ReactCinema.Models
         public string ImageUrl { get; set; }
         public string TrailerUrl { get; set; }
         public string Rating { get; set; }
-        public string Duration { get; set; }
+        public int Duration { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Synopsis { get; set; }
 
