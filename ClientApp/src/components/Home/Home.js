@@ -31,26 +31,26 @@ function Home(props) {
         <div className={classes.flexRow} style={{width:800}}>
           <DateRange fontSize='large' style={{ marginRight: 8 }} />
           <TextField
-              id='date'
-              type='date'
-              value={showdate}
-              onChange={e => setShowdate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
+            id='date'
+            type='date'
+            value={showdate}
+            onChange={e => setShowdate(e.target.value)}
+            InputLabelProps={{ shrink: true }}
           />
         </div>
         <hr style={{ margin: 6 }} />
         <div className={classes.flexRow}>
           <TextField
-              id='outlined-full-width'
-              style={{ margin: 8, width:500 }}
-              placeholder='Search'
-              value={searchFilter}
-              onChange={e => setSearchFilter(e.target.value)}
-              margin='normal'
-              variant='outlined'
-              InputLabelProps={{
-                shrink: true
-              }}
+            id='outlined-full-width'
+            style={{ margin: 8, width:500 }}
+            placeholder='Search'
+            value={searchFilter}
+            onChange={e => setSearchFilter(e.target.value)}
+            margin='normal'
+            variant='outlined'
+            InputLabelProps={{
+              shrink: true
+            }}
           />
         </div>
         <hr style={{ margin: 6 }} />
