@@ -106,13 +106,19 @@ namespace ReactCinema.Controllers
         [Authorize("edit:data")]
         public async Task<IActionResult> PostMovieShowtimesAsync(int id, [FromBody] ShowtimeGroup showtimeGroup)
         {
-            if (showtimeGroup != null)
+            if(showtimeGroup == null)
+            {
+                return BadRequest(new { general = "There was an unexpected error. Try again later." });
+            }
+
+            Dictionary<string,string> errors = showtimeGroup.Validate(_context);
+            if(errors.Count == 0)
             {
                 _context.ShowtimeGroups.Add(showtimeGroup);
                 await _context.SaveChangesAsync();
                 return CreatedAtRoute("GetShowtimeGroup", new { id = showtimeGroup.ShowtimeGroupID }, showtimeGroup);
             }
-            return BadRequest();
+            return BadRequest(errors);
         }
     }
 }

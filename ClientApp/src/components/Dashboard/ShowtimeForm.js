@@ -32,6 +32,7 @@ const style = {
     position: 'sticky',
     bottom: 0,
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center'
   }
 };
@@ -41,15 +42,15 @@ function ShowtimeForm(props) {
   let token = localStorage.getItem('accessToken');
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState({});
 
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [entries, setEntries] = useState([{
     id: shortid.generate(),
     startTime: '07:30',
-    roomID: '',
-    experienceID: ''
+    roomID: -1,
+    experienceID: -1
   }]);
 
   const [rooms, setRooms] = useState([]);
@@ -76,8 +77,8 @@ function ShowtimeForm(props) {
     setEntries([...entries, {
       id: shortid.generate(),
       startTime: '07:30',
-      roomID: '',
-      experienceID: ''
+      roomID: -1,
+      experienceID: -1
     }]);
   };
 
@@ -104,25 +105,23 @@ function ShowtimeForm(props) {
       body: JSON.stringify(data)
     };
 
+    let response;
     fetch(`api/movie/${movieID}/showtimegroups`, requestInit)
       .then(res => {
         setLoading(false);
-        console.log(res.status);
-        if (res.status === 201) {
-          return res.json();
-        }
-        else {
-          setError(true);
-          throw new Error('Failed to create new showtime');
-        }
+        response = res;
+        return res.json();
       })
       .then(data => {
-        if (setOpen) {
+        if (!response.ok) {
+          setError(data);
+        }
+        else if (setOpen) {
           setOpen(false);
         }
-        console.log(data);
       })
       .catch(err => {
+        setError({ general: 'There was an unexpected error. Try again later.'});
         console.log(err);
       });
   };
@@ -168,7 +167,7 @@ function ShowtimeForm(props) {
           {entries.map((entry, index) => (
             <div className={classes.flexRow} key={entry.id}>
               <TextField
-                required
+                error={entry.startTime.length === 0}
                 id='startTime'
                 label={index === 0 ? 'Start Time' : ''}
                 type='time'
@@ -185,12 +184,13 @@ function ShowtimeForm(props) {
                 {index === 0 && <InputLabel htmlFor="room-required">Room</InputLabel>}
                 <Select
                   value={entry.roomID}
+                  error={entry.roomID === -1}
                   onChange={e => handleEntryChange('roomID', index, e)}
                   name="room"
                   inputProps={{
                     id: 'room-required'
                   }} >
-                  <MenuItem value='' />
+                  <MenuItem value={-1} />
                   {rooms.map(room => <MenuItem key={room.roomID} value={room.roomID}>{room.title}</MenuItem>)}
                 </Select>
               </FormControl>
@@ -198,12 +198,13 @@ function ShowtimeForm(props) {
                 {index === 0 && <InputLabel htmlFor="experience-required">Experience</InputLabel>}
                 <Select
                   value={entry.experienceID}
+                  error={entry.experienceID === -1}
                   onChange={e => handleEntryChange('experienceID', index, e)}
                   name="experience"
                   inputProps={{
                     id: 'experience-required',
                   }} >
-                  <MenuItem value='' />
+                  <MenuItem value={-1} />
                   {experiences.map(exp => <MenuItem key={exp.experienceID} value={exp.experienceID}>{exp.title}</MenuItem>)}
                 </Select>
               </FormControl>
@@ -216,10 +217,10 @@ function ShowtimeForm(props) {
           </IconButton>
         </div>
         <div className={classes.submitSection}>
-          {error && (
-            <Typography variant='body1' style={{ color: 'red' }}>
-              There was an unexpected error. Try again later.
-        </Typography>
+          {error.general && (
+            <Typography variant='body1' style={{ color: 'red', textAlign:'center' }}>
+              {error.general}
+            </Typography>
           )}
           {!loading && (
             <Button color='secondary' variant='contained' type='submit'>
