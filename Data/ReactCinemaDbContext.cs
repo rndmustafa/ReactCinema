@@ -17,6 +17,7 @@ namespace ReactCinema.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Movie>().HasIndex(m => m.Title);
+            modelBuilder.Entity<ShowtimeGroup>().HasIndex(s => new { s.MovieID, s.FromDate, s.ToDate });
             modelBuilder.Entity<RoomToExperience>().HasKey(re => new { re.RoomID, re.ExperienceID });
 
             modelBuilder.Entity<Seat>()
