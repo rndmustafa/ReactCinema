@@ -47,8 +47,8 @@ function ShowtimeForm(props) {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [entries, setEntries] = useState([{
-    id: shortid.generate(),
-    startTime: '07:30',
+    shortIdentification: shortid.generate(),
+    startTime: '',
     roomID: -1,
     experienceID: -1
   }]);
@@ -75,8 +75,8 @@ function ShowtimeForm(props) {
 
   const handleEntryAdd = () => {
     setEntries([...entries, {
-      id: shortid.generate(),
-      startTime: '07:30',
+      shortIdentification: shortid.generate(),
+      startTime: '',
       roomID: -1,
       experienceID: -1
     }]);
@@ -165,9 +165,9 @@ function ShowtimeForm(props) {
               variant='outlined' />
           </div>
           {entries.map((entry, index) => (
-            <div className={classes.flexRow} key={entry.id}>
+            <div className={classes.flexRow} key={entry.shortIdentification}>
               <TextField
-                error={entry.startTime.length === 0}
+                error={entry.startTime.length === 0 || error[entry.shortIdentification]}
                 id='startTime'
                 label={index === 0 ? 'Start Time' : ''}
                 type='time'

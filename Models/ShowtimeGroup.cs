@@ -14,21 +14,48 @@ namespace ReactCinema.Models
         public DateTime ToDate { get; set; }
 
         public virtual Movie Movie { get; set; }
-        public virtual ICollection<ShowtimeGroupEntry> ShowtimeGroupEntries { get; set; }
+        public virtual IList<ShowtimeGroupEntry> ShowtimeGroupEntries { get; set; }
 
-        public bool OverlapFound(ReactCinemaDbContext context)
+        private bool OverlapFound(Dictionary<string, string> errors, ReactCinemaDbContext context)
         {
             ShowtimeGroup overlappedGroup = context.ShowtimeGroups
-                .Where(s => s.FromDate < ToDate && s.ToDate > FromDate)
+                .Where(s => s.FromDate < ToDate && s.ToDate > FromDate && s.MovieID == MovieID)
                 .FirstOrDefault();
 
-            return overlappedGroup != null;
+            if(overlappedGroup != null)
+            {
+                errors.Add("general", "Another Showtime Group was found which overlaps with this one.");
+                return true;
+            }
+
+            int movieLength = context.Movies.Where(m => m.MovieID == MovieID).Select(m => m.Duration).Single();
+            ShowtimeGroupEntries.OrderBy(e => e.RoomID).ThenBy(e => e.StartTime);
+
+            for(int i = 0; i < ShowtimeGroupEntries.Count; i++)
+            {
+                if(i == ShowtimeGroupEntries.Count-1)
+                {
+                    break;
+                }
+                else if(ShowtimeGroupEntries[i].Conflicts(ShowtimeGroupEntries[i+1], movieLength))
+                {
+                    errors.Add(ShowtimeGroupEntries[i].ShortIdentification, "This overlaps with the next entry in the same room.");
+                }
+            }
+
+            if(errors.Count > 0)
+            {
+                errors.Add("general", "Scheduling conflicts found, please make sure entries don't overlap with each other.");
+                return true;
+            }
+            return false;
         }
 
-        public bool AllRequiredFields()
+        private bool AllRequiredFields(Dictionary<string, string> errors)
         {
             if(FromDate == null || ToDate == null)
             {
+                errors.Add("general", "Please fill out all fields.");
                 return false;
             }
 
@@ -36,6 +63,7 @@ namespace ReactCinema.Models
             {
                 if(entry.StartTime == "" || entry.RoomID == -1 || entry.ExperienceID == -1)
                 {
+                    errors.Add("general", "Please fill out all fields.");
                     return false;
                 }
             }
@@ -46,14 +74,12 @@ namespace ReactCinema.Models
         public Dictionary<string,string> Validate(ReactCinemaDbContext context)
         {
             Dictionary<string, string> errors = new Dictionary<string, string>();
-            if(!AllRequiredFields())
+            if(!AllRequiredFields(errors))
             {
-                errors.Add("general", "Please fill out all fields.");
                 return errors;
             }
-            if(OverlapFound(context))
+            if(OverlapFound(errors, context))
             {
-                errors.Add("general", "Another Showtime Group was found which overlaps with this one.");
                 return errors;
             }
 
