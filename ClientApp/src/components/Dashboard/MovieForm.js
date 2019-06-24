@@ -132,7 +132,7 @@ function MovieForm(props) {
   };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e) => handleSubmit(e)}>
+    <form style={{ display: "flex", flexDirection: "column", maxWidth: 300 }} onSubmit={(e) => handleSubmit(e)}>
       <TextField
         required
         id='title'

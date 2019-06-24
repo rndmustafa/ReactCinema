@@ -24,7 +24,7 @@ function MovieEdit(props) {
   let movieID = props.match.params.movieID;
   let classes = props.classes;
 
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(1);
   const [movie, setMovie] = useState({});
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -55,11 +55,11 @@ function MovieEdit(props) {
       </Tabs>
       {loading && <CircularProgress/>}
       {value === 0 && !loading && (
-        <div style={{ maxWidth: 300 }}>
+        <div >
           <MovieForm movieData={movie} createMode={false} handleItemUpdate={setMovie} />
         </div>)}
       {value === 1 && !loading && (
-        <div style={{ maxWidth: 300 }}>
+        <div >
           <ShowtimeList movieID={movieID} />
         </div>)}
     </div>
