@@ -83,6 +83,10 @@ namespace ReactCinema.Controllers
             List<ShowtimeGroup> showtimeGroups = await _context
                 .ShowtimeGroups
                 .Where(s => s.MovieID == id)
+                .Include(s => s.ShowtimeGroupEntries)
+                  .ThenInclude(e => e.Room)
+                .Include(s => s.ShowtimeGroupEntries)
+                  .ThenInclude(e => e.Experience)
                 .OrderByDescending(s => s.FromDate)
                 .ToListAsync();
 
@@ -100,6 +104,35 @@ namespace ReactCinema.Controllers
                 .FirstAsync();
 
             return Ok(showtimeGroup);
+        }
+
+        [HttpDelete("showtimegroups/{id}")]
+        [Authorize("edit:data")]
+        public async Task<IActionResult> DeleteShowtimeGroupAsync(int id)
+        {
+            ShowtimeGroup group = await _context.ShowtimeGroups.FindAsync(id);
+            if(group != null)
+            {
+                _context.ShowtimeGroups.Remove(group);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            return NotFound();
+        }
+
+        [HttpPut("showtimegroups/{id}")]
+        [Authorize("edit:data")]
+        public async Task<IActionResult> PutShowtimeGroupAsync(int id, [FromBody] ShowtimeGroup group)
+        {
+            if (id != group.ShowtimeGroupID)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(group).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         [HttpPost("{id}/showtimegroups")]
