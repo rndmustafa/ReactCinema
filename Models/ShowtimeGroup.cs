@@ -16,6 +16,29 @@ namespace ReactCinema.Models
         public virtual Movie Movie { get; set; }
         public virtual IList<ShowtimeGroupEntry> ShowtimeGroupEntries { get; set; }
 
+        public void GenerateShowtimes()
+        {
+            foreach(ShowtimeGroupEntry entry in ShowtimeGroupEntries)
+            {
+                entry.SetInterval();
+                entry.Showtimes = new List<Showtime>();
+                for(DateTime date = FromDate; date <= ToDate; date = date.AddDays(1))
+                {
+                    DateTime showtimeDate = date.Date + entry.Interval;
+                    Showtime newShowtime = new Showtime()
+                    {
+                        MovieID = this.MovieID,
+                        StartTime = showtimeDate,
+                        EndTime = showtimeDate.AddMinutes(Movie.Duration),
+                        RoomID = entry.RoomID,
+                        Soldout = false,
+                        ExperienceID = entry.ExperienceID
+                    };
+                    entry.Showtimes.Add(newShowtime);
+                }
+            }
+        }
+
         private bool OverlapFound(Dictionary<string, string> errors, ReactCinemaDbContext context)
         {
             ShowtimeGroup overlappedGroup = context.ShowtimeGroups
@@ -28,7 +51,7 @@ namespace ReactCinema.Models
                 return true;
             }
 
-            int movieLength = context.Movies.Where(m => m.MovieID == MovieID).Select(m => m.Duration).Single();
+            int movieLength = Movie.Duration;
             ShowtimeGroupEntries.OrderBy(e => e.RoomID).ThenBy(e => e.StartTime);
 
             for(int i = 0; i < ShowtimeGroupEntries.Count; i++)

@@ -24,16 +24,18 @@ namespace ReactCinema.Models
         public virtual Experience Experience { get; set; }
         public virtual ICollection<Showtime> Showtimes { get; set; }
 
-        public bool Conflicts(ShowtimeGroupEntry other, int movieLength)
+        public void SetInterval()
         {
-            if(Interval == TimeSpan.Zero)
+            if (Interval == null || Interval == TimeSpan.Zero)
             {
                 Interval = TimeSpan.Parse(StartTime);
             }
-            if(other.Interval == TimeSpan.Zero)
-            {
-                other.Interval = TimeSpan.Parse(other.StartTime);
-            }
+        }
+
+        public bool Conflicts(ShowtimeGroupEntry other, int movieLength)
+        {
+            SetInterval();
+            other.SetInterval();
 
             if(Interval.Add(new TimeSpan(0,movieLength,0)) > other.Interval && RoomID == other.RoomID)
             {

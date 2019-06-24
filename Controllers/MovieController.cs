@@ -111,9 +111,11 @@ namespace ReactCinema.Controllers
                 return BadRequest(new { general = "There was an unexpected error. Try again later." });
             }
 
+            showtimeGroup.Movie = await _context.Movies.FindAsync(showtimeGroup.MovieID);
             Dictionary<string,string> errors = showtimeGroup.Validate(_context);
             if(errors.Count == 0)
             {
+                showtimeGroup.GenerateShowtimes();
                 _context.ShowtimeGroups.Add(showtimeGroup);
                 await _context.SaveChangesAsync();
                 return CreatedAtRoute("GetShowtimeGroup", new { id = showtimeGroup.ShowtimeGroupID }, showtimeGroup);
