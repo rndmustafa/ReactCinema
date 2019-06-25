@@ -66,7 +66,7 @@ function MovieList(props) {
         setOpen={setFormDialog}
         component={MovieForm}
         handleItemAdd={handleMovieAdd}
-        createMode={true} />
+        createMode />
       {movies.map(movie => (
         <div className={classes.listBlock} key={movie.movieID}>
           <div style={{ display: "flex", flexDirection: "column" }}>
