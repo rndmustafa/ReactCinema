@@ -100,7 +100,9 @@ namespace ReactCinema.Controllers
                 .ShowtimeGroups
                 .Where(s => s.ShowtimeGroupID == id)
                 .Include(s => s.ShowtimeGroupEntries)
-                .ThenInclude(e => e.Room)
+                  .ThenInclude(e => e.Room)
+                .Include(s => s.ShowtimeGroupEntries)
+                  .ThenInclude(e => e.Experience)
                 .FirstAsync();
 
             return Ok(showtimeGroup);
