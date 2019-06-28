@@ -16,9 +16,13 @@ namespace ReactCinema.Models
         public virtual Movie Movie { get; set; }
         public virtual IList<ShowtimeGroupEntry> ShowtimeGroupEntries { get; set; }
 
-        public void GenerateShowtimes()
+        public void GenerateShowtimes(ReactCinemaDbContext context)
         {
-            foreach(ShowtimeGroupEntry entry in ShowtimeGroupEntries)
+            if (Movie == null)
+            {
+                Movie = context.Movies.Find(MovieID);
+            }
+            foreach (ShowtimeGroupEntry entry in ShowtimeGroupEntries)
             {
                 entry.SetInterval();
                 entry.Showtimes = new List<Showtime>();
@@ -42,7 +46,10 @@ namespace ReactCinema.Models
         private bool OverlapFound(Dictionary<string, string> errors, ReactCinemaDbContext context)
         {
             ShowtimeGroup overlappedGroup = context.ShowtimeGroups
-                .Where(s => s.FromDate < ToDate && s.ToDate > FromDate && s.MovieID == MovieID)
+                .Where(s => s.FromDate < ToDate 
+                && s.ToDate > FromDate 
+                && s.MovieID == MovieID 
+                && s.ShowtimeGroupID != ShowtimeGroupID)
                 .FirstOrDefault();
 
             if(overlappedGroup != null)
@@ -51,7 +58,6 @@ namespace ReactCinema.Models
                 return true;
             }
 
-            int movieLength = Movie.Duration;
             ShowtimeGroupEntries.OrderBy(e => e.RoomID).ThenBy(e => e.StartTime);
 
             for(int i = 0; i < ShowtimeGroupEntries.Count; i++)
@@ -60,7 +66,7 @@ namespace ReactCinema.Models
                 {
                     break;
                 }
-                else if(ShowtimeGroupEntries[i].Conflicts(ShowtimeGroupEntries[i+1], movieLength))
+                else if(ShowtimeGroupEntries[i].Conflicts(ShowtimeGroupEntries[i+1], Movie.Duration))
                 {
                     errors.Add(ShowtimeGroupEntries[i].ShortIdentification, "This overlaps with the next entry in the same room.");
                 }
@@ -96,6 +102,11 @@ namespace ReactCinema.Models
 
         public Dictionary<string,string> Validate(ReactCinemaDbContext context)
         {
+            if(Movie == null)
+            {
+                Movie = context.Movies.Find(MovieID);
+            }
+
             Dictionary<string, string> errors = new Dictionary<string, string>();
             if(!AllRequiredFields(errors))
             {
@@ -107,6 +118,12 @@ namespace ReactCinema.Models
             }
 
             return errors; 
+        }
+
+        public void UpdateEntries(ShowtimeGroup updatedGroup)
+        {
+            //TODO: Create this function
+            throw new NotImplementedException();
         }
     }
 }

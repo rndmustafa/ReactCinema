@@ -124,17 +124,21 @@ namespace ReactCinema.Controllers
 
         [HttpPut("showtimegroups/{id}")]
         [Authorize("edit:data")]
-        public async Task<IActionResult> PutShowtimeGroupAsync(int id, [FromBody] ShowtimeGroup group)
+        public async Task<IActionResult> PutShowtimeGroupAsync(int id, [FromBody] ShowtimeGroup UpdatedGroup)
         {
-            if (id != group.ShowtimeGroupID)
+            if (id != UpdatedGroup.ShowtimeGroupID)
             {
                 return BadRequest();
             }
-
-            _context.Entry(group).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            Dictionary<string, string> errors = UpdatedGroup.Validate(_context);
+            if(errors.Count == 0)
+            {
+                ShowtimeGroup group = await _context.ShowtimeGroups.FindAsync(id);
+                group.UpdateEntries(UpdatedGroup);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            return BadRequest(errors);
         }
 
         [HttpPost("{id}/showtimegroups")]
@@ -146,11 +150,12 @@ namespace ReactCinema.Controllers
                 return BadRequest(new { general = "There was an unexpected error. Try again later." });
             }
 
-            showtimeGroup.Movie = await _context.Movies.FindAsync(showtimeGroup.MovieID);
+            //TODO: Check for scheduling conflicts with other movies.
+
             Dictionary<string,string> errors = showtimeGroup.Validate(_context);
             if(errors.Count == 0)
             {
-                showtimeGroup.GenerateShowtimes();
+                showtimeGroup.GenerateShowtimes(_context);
                 _context.ShowtimeGroups.Add(showtimeGroup);
                 await _context.SaveChangesAsync();
                 return CreatedAtRoute("GetShowtimeGroup", new { id = showtimeGroup.ShowtimeGroupID }, showtimeGroup);

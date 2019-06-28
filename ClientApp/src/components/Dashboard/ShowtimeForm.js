@@ -12,6 +12,8 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ClearIcon from '@material-ui/icons/Clear';
+import moment from 'moment';
+import { fetchCreateItem, fetchPutItem } from '../../util/fetchCalls';
 
 const style = {
   formWrapper: {
@@ -38,15 +40,16 @@ const style = {
 };
 
 function ShowtimeForm(props) {
-  const { setOpen, classes, movieID } = props;
-  let token = localStorage.getItem('accessToken');
+  const { setOpen, classes, movieID, groupData, handleItemAdd, handleItemUpdate } = props;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
 
+  const [showtimeGroupID, setShowtimeGroupID] = useState(0);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [entries, setEntries] = useState([{
+    showtimeGroupEntryID: 0,
     shortIdentification: shortid.generate(),
     startTime: '',
     roomID: -1,
@@ -67,9 +70,37 @@ function ShowtimeForm(props) {
       .then(data => setExperiences(data));
   }, []);
 
+  useEffect(() => {
+    if (groupData) {
+      setShowtimeGroupID(groupData.showtimeGroupID);
+      setFromDate(moment(groupData.fromDate).format('YYYY-MM-DD'));
+      setToDate(moment(groupData.ToDate).format('YYYY-MM-DD'));
+
+      let entries = []; 
+      for (let entry of groupData.showtimeGroupEntries) {
+        entries.push({
+          showtimeGroupEntryID: entry.showtimeGroupEntryID,
+          shortIdentification: shortid.generate(),
+          startTime: entry.startTime,
+          roomID: entry.roomID,
+          experienceID: entry.experienceID
+        });
+      }
+      setEntries(entries);
+    }
+  },[]);
+
   const handleEntryChange = (field, index, event) => {
     let newEntries = [...entries];
     newEntries[index][field] = event.target.value;
+
+    let shortId = newEntries[index].shortIdentification;
+    if (error[shortId]) {
+      let newError = { ...error };
+      delete newError[shortId];
+      setError(newError);
+    }
+  
     setEntries(newEntries);
   };
 
@@ -88,25 +119,19 @@ function ShowtimeForm(props) {
     setEntries(newEntries);
   };
 
-  const handleCreate = () => {
-    let data = {
-      movieID,
-      fromDate,
-      toDate,
-      showtimeGroupEntries: entries
-    };
-    let requestInit = {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    };
+  const setRelatedFields = (newGroup) => {
+    for (let entry of newGroup.showtimeGroupEntries) {
+      let roomTitle = rooms.find(r => r.roomID === entry.roomID).title;
+      let expTitle = experiences.find(e => e.experienceID === entry.experienceID).title;
+      entry.room = { title: roomTitle };
+      entry.experience = { title: expTitle };
+    }
+    return newGroup;
+  };
 
+  const handleCreate = (formData, token) => {
     let response;
-    fetch(`api/movie/${movieID}/showtimegroups`, requestInit)
+    fetchCreateItem(`api/movie/${movieID}/showtimegroups`, formData, token)
       .then(res => {
         setLoading(false);
         response = res;
@@ -116,8 +141,11 @@ function ShowtimeForm(props) {
         if (!response.ok) {
           setError(data);
         }
-        else if (setOpen) {
-          setOpen(false);
+        else {
+          handleItemAdd(setRelatedFields(data));
+          if (setOpen) {
+            setOpen(false);
+          }
         }
       })
       .catch(err => {
@@ -126,10 +154,44 @@ function ShowtimeForm(props) {
       });
   };
 
+  const handleUpdate = (formData, token) => {
+    fetchPutItem(`api/movie/showtimegroups/${groupData.showtimeGroupID}`,
+      formData, token)
+      .then(res => {
+        setLoading(false);
+        if (res.status === 400) {
+          res.json().then(data => setError(data));
+        }
+        else {
+          handleItemUpdate(setRelatedFields(formData));
+          if (setOpen) {
+            setOpen(false);
+          }
+        }
+      })
+      .catch(err => {
+        setError({ general: 'There was an unexpected error. Try again later.' });
+        console.log(err);
+      });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    handleCreate();
+    let formData = {
+      showtimeGroupID,
+      movieID,
+      fromDate,
+      toDate,
+      showtimeGroupEntries: entries
+    };
+    let token = localStorage.getItem('accessToken');
+    if (!groupData) {
+      handleCreate(formData, token);
+    }
+    else {
+      handleUpdate(formData, token);
+    }
   };
 
   return (
@@ -167,7 +229,7 @@ function ShowtimeForm(props) {
           {entries.map((entry, index) => (
             <div className={classes.flexRow} key={entry.shortIdentification}>
               <TextField
-                error={entry.startTime.length === 0 || error[entry.shortIdentification]}
+                error={entry.startTime.length === 0 || entry.shortIdentification in error}
                 id='startTime'
                 label={index === 0 ? 'Start Time' : ''}
                 type='time'
