@@ -120,6 +120,7 @@ function ShowtimeForm(props) {
   };
 
   const setRelatedFields = (newGroup) => {
+    //TODO: Possibly remove the need for this function.
     for (let entry of newGroup.showtimeGroupEntries) {
       let roomTitle = rooms.find(r => r.roomID === entry.roomID).title;
       let expTitle = experiences.find(e => e.experienceID === entry.experienceID).title;

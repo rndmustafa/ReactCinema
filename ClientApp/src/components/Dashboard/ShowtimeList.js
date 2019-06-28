@@ -50,7 +50,7 @@ function ShowtimeList(props) {
 
   return (
     <div>
-      <Button style={{marginTop: 10}} variant="contained" color="secondary" onClick={() => { setFormDialog(true); }}>
+      <Button style={{marginTop: 10}} variant="contained" color="secondary" onClick={() => { setSelectedGroup({}); setFormDialog(true); }}>
         <AddIcon />Add Showtimes
       </Button>
       <WarnDeleteDialog
