@@ -31,7 +31,6 @@ function ExperienceList(props) {
   }, []);
 
   const [formDialog, setFormDialog] = useState(false);
-  const [createMode, setCreateMode] = useState(true);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [selectedExp, setSelectedExp] = useState({});
   const handleDelete = () => {
@@ -44,7 +43,6 @@ function ExperienceList(props) {
   };
 
   const handleEditDialogOpen = (experience) => {
-    setCreateMode(false);
     setSelectedExp(experience);
     setFormDialog(true);
   };
@@ -66,7 +64,7 @@ function ExperienceList(props) {
     <div>
       <div className={classes.titleSection}>
         <Typography variant="h4">Experiences</Typography>
-        <Button variant="contained" color="secondary" onClick={() => { setCreateMode(true); setFormDialog(true); }}>
+        <Button variant="contained" color="secondary" onClick={() => { setSelectedExp({}); setFormDialog(true); }}>
           <AddIcon />Add Experience
         </Button>
       </div>
@@ -82,8 +80,7 @@ function ExperienceList(props) {
         component={ExperienceForm}
         handleItemAdd={handleExperienceAdd}
         handleItemUpdate={handleExperienceUpdate}
-        experienceData={selectedExp}
-        createMode={createMode} />
+        experienceData={Object.keys(selectedExp).length === 0 ? null : selectedExp} />
       {experiences.map(experience => (
         <div className={classes.listBlock} key={experience.experienceID}>
           <div style={{ display: "flex", flexDirection: "column" }}>

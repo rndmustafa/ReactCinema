@@ -48,7 +48,7 @@ namespace ReactCinema.Controllers
                 await _context.SaveChangesAsync();
                 return CreatedAtRoute("GetExperience",new { id = experience.ExperienceID }, experience);
             }
-            return BadRequest();
+            return BadRequest(new { general = "Failed to create new experience" });
         }
 
         [HttpPut("{id}")]
@@ -57,7 +57,7 @@ namespace ReactCinema.Controllers
         {
             if(id != experience.ExperienceID)
             {
-                return BadRequest();
+                return BadRequest(new { general = "Failed to update experience" });
             }
 
             _context.Entry(experience).State = EntityState.Modified;

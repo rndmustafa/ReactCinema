@@ -3,50 +3,39 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
+import { fetchCreateItem, fetchPutItem } from '../../util/fetchCalls';
 
 
 function ExperienceForm(props) {
-  const { createMode, experienceData, setOpen, handleItemAdd, handleItemUpdate } = props;
-  let token = localStorage.getItem('accessToken');
+  const { experienceData, setOpen, handleItemAdd, handleItemUpdate } = props;
 
   const [experienceTitle, setExperienceTitle] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState({});
 
   useEffect(() => {
-    if (!createMode && experienceData) {
+    if (experienceData) {
       setExperienceTitle(experienceData.title);
     }
   }, []);
 
-  const handleCreate = () => {
-    setLoading(true);
-    let requestInit = {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title: experienceTitle })
-    };
-
-    fetch('api/experience', requestInit)
+  const handleCreate = (expData, token) => {
+    let response;
+    fetchCreateItem('api/experience',expData,token)
       .then(res => {
         setLoading(false);
-        if (res.status === 201) {
-          return res.json();
-        }
-        else {
-          setError(true);
-          throw new Error('Failed to create new experience');
-        }
+        response = res;
+        return res.json();
       })
       .then(data => {
-        if (createMode && setOpen) {
-          console.log(data);
+        if (response.ok) {
           handleItemAdd(data);
-          setOpen(false);
+          if (setOpen) {
+            setOpen(false);
+          }
+        }
+        else {
+          setError(data);
         }
       })
       .catch(err => {
@@ -54,27 +43,12 @@ function ExperienceForm(props) {
       });
   };
 
-  const handleUpdate = () => {
-    setLoading(true);
-    let expData = {
-      experienceID: experienceData.experienceID,
-      title: experienceTitle
-    };
-    let requestInit = {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(expData)
-    };
-
-    fetch(`api/experience/${experienceData.experienceID}`, requestInit)
+  const handleUpdate = (expData, token) => {
+    fetchPutItem(`api/experience/${experienceData.experienceID}`, expData, token)
       .then(res => {
         setLoading(false);
         if (res.status === 400) {
-          setError(true);
+          res.json().then(data => setError(data));
         }
         else {
           handleItemUpdate(expData);
@@ -87,16 +61,23 @@ function ExperienceForm(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (createMode) {
-      handleCreate();
+    setLoading(true);
+    let expData = {
+      title: experienceTitle
+    };
+    let token = localStorage.getItem('accessToken');
+    if (!experienceData) {
+      handleCreate(expData, token);
     }
     else {
-      handleUpdate();
+      expData.experienceID = experienceData.experienceID;
+      handleUpdate(expData, token);
     }
   };
-
+  let titleText = experienceData ? 'Edit Experience' : 'New Experience';
   return (
     <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e) => handleSubmit(e)}>
+      <Typography variant='h6' gutterBottom align='center'>{titleText}</Typography>
       <TextField
         required
         id='title'
@@ -105,9 +86,9 @@ function ExperienceForm(props) {
         onChange={(e) => setExperienceTitle(e.target.value)}
         margin='normal'
         variant='outlined' />
-      {error && (
+      {error.general && (
         <Typography variant="body1" style={{ color: "red" }}>
-          There was an unexpected error. Try again later.
+          {error.general}
         </Typography>
       )}
       {!loading && (
