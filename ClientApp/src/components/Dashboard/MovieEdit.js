@@ -24,7 +24,7 @@ function MovieEdit(props) {
   let movieID = props.match.params.movieID;
   let classes = props.classes;
 
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(0);
   const [movie, setMovie] = useState({});
   const [loading, setLoading] = useState(true);
   useEffect(() => {

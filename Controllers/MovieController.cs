@@ -150,8 +150,6 @@ namespace ReactCinema.Controllers
                 return BadRequest(new { general = "There was an unexpected error. Try again later." });
             }
 
-            //TODO: Check for scheduling conflicts with other movies.
-
             Dictionary<string,string> errors = showtimeGroup.Validate(_context);
             if(errors.Count == 0)
             {

@@ -122,7 +122,6 @@ namespace ReactCinema.Models
 
         public void UpdateEntries(ShowtimeGroup updatedGroup)
         {
-            //TODO: Create this function
             throw new NotImplementedException();
         }
     }
