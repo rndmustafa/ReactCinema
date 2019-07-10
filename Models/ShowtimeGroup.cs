@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace ReactCinema.Models
@@ -59,7 +60,6 @@ namespace ReactCinema.Models
             }
 
             ShowtimeGroupEntries.OrderBy(e => e.RoomID).ThenBy(e => e.StartTime);
-
             for(int i = 0; i < ShowtimeGroupEntries.Count; i++)
             {
                 if(i == ShowtimeGroupEntries.Count-1)
@@ -77,6 +77,28 @@ namespace ReactCinema.Models
                 errors.Add("general", "Scheduling conflicts found, please make sure entries don't overlap with each other.");
                 return true;
             }
+
+            foreach (ShowtimeGroupEntry entry in ShowtimeGroupEntries)
+            {
+                entry.SetInterval();
+                for (DateTime date = FromDate; date <= ToDate; date = date.AddDays(1))
+                {
+                    DateTime showtimeDate = date.Date + entry.Interval;
+                    Showtime showtime = context.Showtimes
+                        .Where(s => s.RoomID == entry.RoomID 
+                        && s.StartTime < showtimeDate.AddMinutes(Movie.Duration) 
+                        && s.EndTime > showtimeDate
+                        && s.MovieID != MovieID)
+                        .Include(s => s.Movie)
+                        .FirstOrDefault();
+                    if(showtime != null)
+                    {
+                        errors.Add("general", $"Showtime conflict with {showtime.Movie.Title} at {showtime.StartTime}");
+                        return true;
+                    }
+                }
+            }
+
             return false;
         }
 
@@ -108,11 +130,7 @@ namespace ReactCinema.Models
             }
 
             Dictionary<string, string> errors = new Dictionary<string, string>();
-            if(!AllRequiredFields(errors))
-            {
-                return errors;
-            }
-            if(OverlapFound(errors, context))
+            if(!AllRequiredFields(errors) || OverlapFound(errors,context))
             {
                 return errors;
             }
