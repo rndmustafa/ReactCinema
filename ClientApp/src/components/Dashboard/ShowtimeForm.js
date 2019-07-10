@@ -74,7 +74,7 @@ function ShowtimeForm(props) {
     if (groupData) {
       setShowtimeGroupID(groupData.showtimeGroupID);
       setFromDate(moment(groupData.fromDate).format('YYYY-MM-DD'));
-      setToDate(moment(groupData.ToDate).format('YYYY-MM-DD'));
+      setToDate(moment(groupData.toDate).format('YYYY-MM-DD'));
 
       let entries = []; 
       for (let entry of groupData.showtimeGroupEntries) {
