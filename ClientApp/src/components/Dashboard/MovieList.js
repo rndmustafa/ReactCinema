@@ -51,7 +51,7 @@ function MovieList(props) {
     <div>
       <div className={classes.titleSection}>
         <Typography variant="h4">Movies</Typography>
-        <Button variant="contained" color="secondary" onClick={() => setFormDialog(true)}>
+        <Button variant="contained" color="secondary" onClick={() => { setSelectedMovie(-1); setFormDialog(true); }}>
           <AddIcon />Add Movie
         </Button>
       </div>
@@ -65,8 +65,7 @@ function MovieList(props) {
         open={formDialog}
         setOpen={setFormDialog}
         component={MovieForm}
-        handleItemAdd={handleMovieAdd}
-        createMode />
+        handleItemAdd={handleMovieAdd} />
       {movies.map(movie => (
         <div className={classes.listBlock} key={movie.movieID}>
           <div style={{ display: "flex", flexDirection: "column" }}>

@@ -45,7 +45,7 @@ namespace ReactCinema.Controllers
                 await _context.SaveChangesAsync();
                 return CreatedAtRoute("GetMovie", new { id = newMovie.MovieID }, newMovie);
             }
-            return BadRequest();
+            return BadRequest(new { general = "There was an unexpected error. Try again later." });
         }
 
         [HttpPut("{id}")]
@@ -54,7 +54,7 @@ namespace ReactCinema.Controllers
         {
             if (id != movie.MovieID)
             {
-                return BadRequest();
+                return BadRequest(new { general = "There was an unexpected error. Try again later." });
             }
 
             _context.Entry(movie).State = EntityState.Modified;
@@ -133,9 +133,15 @@ namespace ReactCinema.Controllers
             Dictionary<string, string> errors = UpdatedGroup.Validate(_context);
             if(errors.Count == 0)
             {
-                ShowtimeGroup group = await _context.ShowtimeGroups.FindAsync(id);
+                ShowtimeGroup group = await _context.ShowtimeGroups
+                    .Where(g => g.ShowtimeGroupID == id)
+                    .Include(g => g.ShowtimeGroupEntries)
+                      .ThenInclude(e => e.Showtimes)
+                    .SingleAsync();
+
                 group.UpdateEntries(UpdatedGroup);
                 await _context.SaveChangesAsync();
+
                 return NoContent();
             }
             return BadRequest(errors);

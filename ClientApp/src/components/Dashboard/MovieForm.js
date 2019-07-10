@@ -5,10 +5,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import getMovieData from '../../util/getMovieData';
 import moment from 'moment';
+import { fetchCreateItem, fetchPutItem } from '../../util/fetchCalls';
 
 function MovieForm(props) {
-  const { createMode, movieData, setOpen, handleItemAdd, handleItemUpdate } = props;
-  let token = localStorage.getItem('accessToken');
+  const { movieData, setOpen, handleItemAdd, handleItemUpdate } = props;
 
   const [title, setTitle] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -20,7 +20,7 @@ function MovieForm(props) {
 
   const [loading, setLoading] = useState(false);
   const [movieFetchLoading, setMovieFetchLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState({});
 
   const handleMovieData = (data) => {
     if (!data.Error) {
@@ -35,72 +35,41 @@ function MovieForm(props) {
   };
 
   useEffect(() => {
-    if (!createMode && movieData) {
+    if (movieData) {
       movieData.releaseDate = moment(movieData.releaseDate).format('YYYY-MM-DD');
       handleMovieData(movieData);
     }
   }, []);
 
-  const handleCreate = () => {
-    setLoading(true);
-    let data = {
-      title, imageUrl, trailerUrl, rating,
-      duration, releaseDate, synopsis
-    };
-    let requestInit = {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-        'Content-Type':'application/json'
-      },
-      body: JSON.stringify(data)
-    };
-
-    fetch('api/movie', requestInit)
+  const handleCreate = (data,token) => {
+    fetchCreateItem('api/movie',data,token)
       .then(res => {
         setLoading(false);
         if (res.status === 201) {
           return res.json();
         }
         else {
-          setError(true);
-          throw new Error('Failed to create new movie');
+          setError({ general: 'Failed to create new movie'});
         }
       })
       .then(data => {
-        if (createMode && setOpen) {
-          handleItemAdd(data);
+        handleItemAdd(data);
+        if (setOpen) {
           setOpen(false);
         }
       })
       .catch(err => {
+        setError({ general: 'An unexpected error occured' });
         console.log(err);
       });
   };
 
-  const handleUpdate = () => {
-    setLoading(true);
-    let data = {
-      movieID: movieData.movieID,
-      title, imageUrl, trailerUrl, rating,
-      duration, releaseDate, synopsis
-    };
-    let requestInit = {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    };
-
-    fetch(`api/movie/${movieData.movieID}`, requestInit)
+  const handleUpdate = (data,token) => {
+    fetchPutItem(`api/movie/${movieData.movieID}`,data,token)
       .then(res => {
         setLoading(false);
         if (res.status === 400) {
-          setError(true);
+          setError({ general: 'Failed to create new movie' });
         }
         else {
           handleItemUpdate(data);
@@ -110,11 +79,18 @@ function MovieForm(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (createMode) {
-      handleCreate();
+    setLoading(true);
+    let data = {
+      title, imageUrl, trailerUrl, rating,
+      duration, releaseDate, synopsis
+    };
+    let token = localStorage.getItem('accessToken');
+    if (!movieData) {
+      handleCreate(data, token);
     }
     else {
-      handleUpdate();
+      data.movieID = movieData.movieID;
+      handleUpdate(data, token);
     }
   };
 
@@ -202,7 +178,7 @@ function MovieForm(props) {
         onChange={(e) => setSynopsis(e.target.value)}
         margin='normal'
         variant='outlined' />
-      {error && (
+      {error.general && (
         <Typography variant="body1" style={{ color: "red" }}>
           There was an unexpected error. Try again later.
         </Typography>
