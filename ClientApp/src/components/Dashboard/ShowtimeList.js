@@ -1,75 +1,48 @@
 ﻿import React, { useState, useEffect } from 'react';
 import AddIcon from '@material-ui/icons/Add';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import FormDialog from '../../util/FormDialog';
 import ShowtimeForm from './ShowtimeForm';
 import ShowtimeGroup from './ShowtimeGroup';
 import WarnDeleteDialog from '../../util/WarnDeleteDialog';
+import withFormHandlers from '../../util/withFormHandlers';
 
 function ShowtimeList(props) {
-  const { movieID } = props;
+  const { movieID, formDialog,
+    deleteDialog, selectedData, handleEditDialogOpen,
+    handleAddDialogOpen, handleDeleteDialogOpen,
+    handleItemAdd, handleItemDelete, handleItemUpdate,
+    setFormDialog, setDeleteDialog } = props;
 
-  const [formDialog, setFormDialog] = useState(false);
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState({});
-
-  const [groups, setGroups] = useState([]);
+  const [data, setData] = useState([]);
   useEffect(() => {
     fetch(`api/movie/${movieID}/showtimegroups`)
       .then(res => res.json())
-      .then(resData => {
-        setGroups(resData);
-      });
+      .then(jsonData => setData(jsonData));
   }, []);
-
-  const handleDelete = () => {
-    setGroups(groups.filter((group) => group.showtimeGroupID !== selectedGroup.showtimeGroupID));
-  };
-
-  const handleDeleteDialogOpen = (group) => {
-    setSelectedGroup(group);
-    setDeleteDialog(true);
-  };
-
-  const handleEditDialogOpen = (group) => {
-    setSelectedGroup(group);
-    setFormDialog(true);
-  };
-
-  const handleGroupAdd = (newGroup) => {
-    setGroups(groups.concat(newGroup));
-  };
-
-  const handleGroupUpdate = (updatedGroup) => {
-    let index = groups.findIndex(group => group.showtimeGroupID === updatedGroup.showtimeGroupID);
-    let newGroups = [...groups];
-    newGroups[index] = updatedGroup;
-    setGroups(newGroups);
-  };
 
   return (
     <div>
-      <Button style={{marginTop: 10}} variant="contained" color="secondary" onClick={() => { setSelectedGroup({}); setFormDialog(true); }}>
+      <Button style={{ marginTop: 10 }} variant="contained" color="secondary" onClick={handleAddDialogOpen}>
         <AddIcon />Add Showtimes
       </Button>
       <WarnDeleteDialog
         open={deleteDialog}
         setOpen={setDeleteDialog}
-        fetchUrl={`api/movie/showtimegroups/${selectedGroup.showtimeGroupID}`}
-        handleDelete={handleDelete} />
+        fetchUrl={`api/movie/showtimegroups/${selectedData.showtimeGroupID}`}
+        handleDelete={() => handleItemDelete(data)} />
       <FormDialog
         open={formDialog}
         setOpen={setFormDialog}
         component={ShowtimeForm}
         movieID={movieID}
-        handleItemAdd={handleGroupAdd}
-        handleItemUpdate={handleGroupUpdate}
-        groupData={Object.keys(selectedGroup).length === 0 ? null : selectedGroup} />
-      {groups.map(group => (
+        handleItemAdd={(newData) => setData(handleItemAdd(data, newData))}
+        handleItemUpdate={(updateData) => setData(handleItemUpdate(data, updateData))}
+        groupData={Object.keys(selectedData).length === 0 ? null : selectedData} />
+      {data.map(item => (
         <ShowtimeGroup
-          key={group.showtimeGroupID}
-          groupData={group}
+          key={item.showtimeGroupID}
+          groupData={item}
           handleDeleteDialogOpen={handleDeleteDialogOpen}
           handleEditDialogOpen={handleEditDialogOpen} />
       ))}
@@ -77,4 +50,4 @@ function ShowtimeList(props) {
   );
 }
 
-export default ShowtimeList;
+export default withFormHandlers(ShowtimeList, { itemIDKey: 'showtimeGroupID'});
