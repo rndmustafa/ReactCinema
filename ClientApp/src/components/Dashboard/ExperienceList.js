@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import WarnDeleteDialog from '../../util/WarnDeleteDialog';
 import FormDialog from '../../util/FormDialog';
 import ExperienceForm from './ExperienceForm';
+import withFormHandlers from '../../util/withFormHandlers';
 
 const style = (theme) => ({
   titleSection: {
@@ -19,52 +20,24 @@ const style = (theme) => ({
 });
 
 function ExperienceList(props) {
-  const { classes } = props;
+  const { classes, formDialog,
+    deleteDialog, selectedData, handleEditDialogOpen,
+    handleAddDialogOpen, handleDeleteDialogOpen,
+    handleItemAdd, handleItemDelete, handleItemUpdate, 
+    setFormDialog, setDeleteDialog } = props;
 
-  const [experiences, setExperiences] = useState([]);
+  const [data, setData] = useState([]);
   useEffect(() => {
     fetch('api/experience')
       .then(res => res.json())
-      .then(resData => {
-        setExperiences(resData);
-      });
+      .then(jsonData => setData(jsonData));
   }, []);
-
-  const [formDialog, setFormDialog] = useState(false);
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const [selectedExp, setSelectedExp] = useState({});
-  const handleDelete = () => {
-    setExperiences(experiences.filter((experience) => experience.experienceID !== selectedExp.experienceID));
-  };
-
-  const handleDeleteDialogOpen = (experience) => {
-    setSelectedExp(experience);
-    setDeleteDialog(true);
-  };
-
-  const handleEditDialogOpen = (experience) => {
-    setSelectedExp(experience);
-    setFormDialog(true);
-  };
-
-  const handleExperienceAdd = (newExperience) => {
-    setExperiences(experiences.concat(newExperience));
-  };
-
-  const handleExperienceUpdate = (updatedExperience) => {
-    let index = experiences.findIndex(exp => exp.experienceID === updatedExperience.experienceID);
-    setExperiences([
-      ...experiences.slice(0, index),
-      updatedExperience,
-      ...experiences.slice(index+1)
-    ]);
-  };
 
   return (
     <div>
       <div className={classes.titleSection}>
         <Typography variant="h4">Experiences</Typography>
-        <Button variant="contained" color="secondary" onClick={() => { setSelectedExp({}); setFormDialog(true); }}>
+        <Button variant="contained" color="secondary" onClick={handleAddDialogOpen}>
           <AddIcon />Add Experience
         </Button>
       </div>
@@ -72,29 +45,29 @@ function ExperienceList(props) {
       <WarnDeleteDialog
         open={deleteDialog}
         setOpen={setDeleteDialog}
-        fetchUrl={`api/experience/${selectedExp.experienceID}`}
-        handleDelete={handleDelete} />
+        fetchUrl={`api/experience/${selectedData.experienceID}`}
+        handleDelete={() => setData(handleItemDelete(data))} />
       <FormDialog
         open={formDialog}
         setOpen={setFormDialog}
         component={ExperienceForm}
-        handleItemAdd={handleExperienceAdd}
-        handleItemUpdate={handleExperienceUpdate}
-        experienceData={Object.keys(selectedExp).length === 0 ? null : selectedExp} />
-      {experiences.map(experience => (
-        <div className={classes.listBlock} key={experience.experienceID}>
+        handleItemAdd={(newData) => setData(handleItemAdd(data,newData))}
+        handleItemUpdate={(updateData) => setData(handleItemUpdate(data,updateData))}
+        experienceData={Object.keys(selectedData).length === 0 ? null : selectedData} />
+      {data.map(item => (
+        <div className={classes.listBlock} key={item.experienceID}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Typography
               style={{ textDecoration: 'none' }}
               variant="h6">
-              {experience.title}
+              {item.title}
             </Typography>
           </div>
           <div>
-            <IconButton onClick={() => handleEditDialogOpen(experience)}>
+            <IconButton onClick={() => handleEditDialogOpen(item)}>
               <EditIcon />
             </IconButton>
-            <IconButton onClick={() => handleDeleteDialogOpen(experience)}>
+            <IconButton onClick={() => handleDeleteDialogOpen(item)}>
               <ClearIcon />
             </IconButton>
           </div>
@@ -104,4 +77,4 @@ function ExperienceList(props) {
   );
 }
 
-export default withStyles(style)(ExperienceList);
+export default withStyles(style)(withFormHandlers(ExperienceList, { itemIDKey: 'experienceID' }));
