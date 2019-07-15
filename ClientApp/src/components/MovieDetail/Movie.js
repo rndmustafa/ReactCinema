@@ -37,7 +37,7 @@ function Movie(props) {
       <Grid item sm={11} container>
         <Grid item sm={6} container>
           <Grid item xs>
-            <img src={movie.imageUrl} alt={movie.title} className={classes.img} />
+            <img src={movie.imageUrl} alt={movie.title} className={classes.image} />
             <Button variant='contained' color='default' onClick={() => setModalOpen(true)}>
               <PlayCircleOutline fontSize='large' />
               Watch Trailer
