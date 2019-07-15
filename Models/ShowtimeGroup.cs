@@ -102,11 +102,17 @@ namespace ReactCinema.Models
             return false;
         }
 
-        private bool AllRequiredFields(Dictionary<string, string> errors)
+        private bool ValidFields(Dictionary<string, string> errors)
         {
             if(FromDate == null || ToDate == null)
             {
                 errors.Add("general", "Please fill out all fields.");
+                return false;
+            }
+
+            if(FromDate > ToDate)
+            {
+                errors.Add("fromDate", "From Date must be before or equal to To Date.");
                 return false;
             }
 
@@ -130,13 +136,14 @@ namespace ReactCinema.Models
             }
 
             Dictionary<string, string> errors = new Dictionary<string, string>();
-            if(!AllRequiredFields(errors) || OverlapFound(errors,context))
+            if(!ValidFields(errors) || OverlapFound(errors,context))
             {
                 return errors;
             }
 
             return errors; 
         }
+
 
         public void UpdateEntries(ShowtimeGroup updatedGroup)
         {

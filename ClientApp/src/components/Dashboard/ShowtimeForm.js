@@ -129,15 +129,23 @@ function ShowtimeForm(props) {
     return newGroup;
   };
 
+  const validateFromDate = (value) => {
+    let errorFromDate = '';
+    if (moment(value,'YYYY-MM-DD') > moment(toDate,'YYYY-MM-DD')) {
+      errorFromDate = 'From Date must be before or equal to To Date.';
+    }
+    setError({ ...error, fromDate: errorFromDate });
+  };
+
   const handleCreate = (formData, token) => {
     let response;
     fetchCreateItem(`api/movie/${movieID}/showtimegroups`, formData, token)
       .then(res => {
-        setLoading(false);
         response = res;
         return res.json();
       })
       .then(data => {
+        setLoading(false);
         if (!response.ok) {
           setError(data);
         }
@@ -146,7 +154,7 @@ function ShowtimeForm(props) {
           if (setOpen) {
             setOpen(false);
           }
-        }
+        }      
       })
       .catch(err => {
         setError({ general: 'There was an unexpected error. Try again later.'});
@@ -202,12 +210,14 @@ function ShowtimeForm(props) {
           <div className={classes.flexRow}>
             <TextField
               required
+              error={error.fromDate ? true:false}
+              helperText={error.fromDate}
               style={{ marginRight: '10px' }}
               id='fromDate'
               type='date'
               label='From Date'
               value={fromDate}
-              onChange={e => setFromDate(e.target.value)}
+              onChange={e => { setFromDate(e.target.value); validateFromDate(e.target.value); }}
               margin='normal'
               InputLabelProps={{
                 shrink: true,
