@@ -21,11 +21,10 @@ const style = (theme) => ({
 });
 
 function MovieList(props) {
-  const { classes, formDialog,
-    deleteDialog, selectedData, handleEditDialogOpen,
-    handleAddDialogOpen, handleDeleteDialogOpen,
-    handleItemAdd, handleItemDelete, handleItemUpdate,
-    setFormDialog, setDeleteDialog } = props;
+  const { classes, formDialog, deleteDialog,
+    selectedData,handleAddDialogOpen, handleDeleteDialogOpen,
+    handleItemAdd, handleItemDelete, setFormDialog,
+    setDeleteDialog } = props;
 
   const [movies, setMovies] = useState([]);
   useEffect(() => {
