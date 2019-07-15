@@ -30,7 +30,7 @@ function ShowtimeList(props) {
         open={deleteDialog}
         setOpen={setDeleteDialog}
         fetchUrl={`api/movie/showtimegroups/${selectedData.showtimeGroupID}`}
-        handleDelete={() => handleItemDelete(data)} />
+        handleDelete={() => setData(handleItemDelete(data))} />
       <FormDialog
         open={formDialog}
         setOpen={setFormDialog}
