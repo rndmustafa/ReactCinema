@@ -10,6 +10,7 @@ namespace ReactCinema.Models
         public int RoomID { get; set; }
         public string Title { get; set; }
         public int? LayoutID { get; set; }
+        public int Capacity { get; set; }
 
         public virtual ICollection<RoomToExperience> RoomToExperiences { get; set; }
         public virtual ICollection<Showtime> Showtimes { get; set; }
