@@ -10,6 +10,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import WarnDeleteDialog from '../../util/WarnDeleteDialog';
 import FormDialog from '../../util/FormDialog';
 import MovieForm from './MovieForm';
+import withFormHandlers from '../../util/withFormHandlers';
 
 const style = (theme) => ({
   titleSection: {
@@ -20,15 +21,11 @@ const style = (theme) => ({
 });
 
 function MovieList(props) {
-  const { classes } = props;
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const [formDialog, setFormDialog] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState(-1);
-
-  const handleDialogOpen = (movieID) => {
-    setSelectedMovie(movieID);
-    setDeleteDialog(true);
-  };
+  const { classes, formDialog,
+    deleteDialog, selectedData, handleEditDialogOpen,
+    handleAddDialogOpen, handleDeleteDialogOpen,
+    handleItemAdd, handleItemDelete, handleItemUpdate,
+    setFormDialog, setDeleteDialog } = props;
 
   const [movies, setMovies] = useState([]);
   useEffect(() => {
@@ -39,19 +36,11 @@ function MovieList(props) {
       });
   }, []);
 
-  const handleDelete = () => {
-    setMovies(movies.filter(movie => movie.movieID !== selectedMovie));
-  };
-
-  const handleMovieAdd = (newMovie) => {
-    setMovies(movies.concat(newMovie));
-  };
-
   return (
     <div>
       <div className={classes.titleSection}>
         <Typography variant="h4">Movies</Typography>
-        <Button variant="contained" color="secondary" onClick={() => { setSelectedMovie(-1); setFormDialog(true); }}>
+        <Button variant="contained" color="secondary" onClick={handleAddDialogOpen}>
           <AddIcon />Add Movie
         </Button>
       </div>
@@ -59,13 +48,13 @@ function MovieList(props) {
       <WarnDeleteDialog
         open={deleteDialog}
         setOpen={setDeleteDialog}
-        fetchUrl={`api/movie/${selectedMovie}`}
-        handleDelete={handleDelete} />
+        fetchUrl={`api/movie/${selectedData.movieID}`}
+        handleDelete={() => setMovies(handleItemDelete(movies))} />
       <FormDialog
         open={formDialog}
         setOpen={setFormDialog}
         component={MovieForm}
-        handleItemAdd={handleMovieAdd} />
+        handleItemAdd={(newMovie) => setMovies(handleItemAdd(movies, newMovie))} />
       {movies.map(movie => (
         <div className={classes.listBlock} key={movie.movieID}>
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -81,7 +70,7 @@ function MovieList(props) {
             <IconButton component={Link} to={`${props.match.url}/${movie.movieID}`}>
               <EditIcon />
             </IconButton>
-            <IconButton onClick={() => handleDialogOpen(movie.movieID)}>
+            <IconButton onClick={() => handleDeleteDialogOpen(movie)}>
               <ClearIcon />
             </IconButton>
           </div>
@@ -91,4 +80,4 @@ function MovieList(props) {
   );
 }
 
-export default withStyles(style)(MovieList);
+export default withStyles(style)(withFormHandlers(MovieList, { itemIDKey: 'movieID' }));
