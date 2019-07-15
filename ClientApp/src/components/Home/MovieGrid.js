@@ -1,38 +1,50 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import MovieCard from './MovieCard';
+import FrownIcon from '@material-ui/icons/SentimentDissatisfied';
+import Typography from '@material-ui/core/Typography';
 
 const styles = {
   flexGrid: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent:'center'
+  },
+  flexCol: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems:'center'
   }
 };
 
 function MovieGrid(props) {
-  const { searchFilter, date, classes } = props;
+  const { searchFilter, showDate, classes } = props;
+
   const [data, setData] = useState([]);
-  let isMounted = false;
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    isMounted = true;
-    fetch('api/movie')
+    fetch(`api/movie?showdate=${showDate}`)
       .then(res => res.json())
       .then(resData => {
-        if (isMounted) {
-          setData(resData);
-        }
+        setLoading(false);
+        setData(resData);
       });
-    return () => {
-      isMounted = false;
-    }
-  }, []);
+  }, [showDate]);
 
   let filteredData = data.filter(m => m.title.toLowerCase().includes(searchFilter.toLowerCase()));
 
   return (
     <div className={classes.flexGrid}>
-        {filteredData.map(movie => <MovieCard key={movie.movieID} movie={movie}/>)}
+      {!loading && filteredData.length === 0 && (
+        <div className={classes.flexCol}>
+          <FrownIcon fontSize="large" />
+          <Typography variant="subtitle1">
+            No movies found with the current search parameters. 
+          </Typography>
+        </div>
+      )}  
+      {filteredData.map(movie => <MovieCard key={movie.movieID} movie={movie}/>)}
     </div>
   );
 }

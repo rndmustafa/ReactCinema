@@ -22,9 +22,15 @@ namespace ReactCinema.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMoviesAsync()
+        public async Task<IActionResult> GetMoviesAsync(DateTime showdate)
         {
-            List<Movie> movies = await _context.Movies.ToListAsync();
+            IQueryable<Movie> moviesQuery = _context.Movies;
+            if(showdate != DateTime.MinValue)
+            {
+                moviesQuery = moviesQuery.Where(m => m.Showtimes.Any(s => s.StartTime.Date == showdate.Date));
+            }
+            List<Movie> movies = await moviesQuery.ToListAsync();
+
             return Ok(movies);
         }
 

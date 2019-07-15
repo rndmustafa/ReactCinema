@@ -55,7 +55,7 @@ function Home(props) {
         </div>
         <hr style={{ margin: 6 }} />
       </form>
-      <MovieGrid searchFilter={searchFilter} date={showdate} />
+      <MovieGrid searchFilter={searchFilter} showDate={showdate} />
     </div>
   );
 }
