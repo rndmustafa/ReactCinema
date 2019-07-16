@@ -24,6 +24,7 @@ function MovieGrid(props) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     fetch(`api/movie?showdate=${showDate}`)
       .then(res => res.json())
       .then(resData => {
