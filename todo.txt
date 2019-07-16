@@ -1,13 +1,16 @@
 ﻿Auth.js, 60: Debug renewing auth issue
 ShowtimeForm.js, 123: Possibly remove the need for setRelatedFields
 ShowtimeGroup.cs, 125: Implemented UpdateEntries function
-Finish Room Page in dashboard
 Finish Movie Detail Page
 Create reserve ticket pages
 Fix issues with responsiveness
 Add Pagination
 Admin Info Page
 Adjust connection strings and Auth0 settings for production environment
+Remove async suffix
+Error handling on get routes
+validate fields
+make sure that item being deleted isn't being used
 
 Finished:
 ShowtimeGroup.cs: Check for scheduling conflicts with other movies
@@ -15,3 +18,4 @@ MovieForm.js: Clean code
 Create a HOC to remove redundancy between List and Form components
 Add capacity to room model
 Home.js: Only display movies that have showtimes on the showDate
+Finish Room Page in dashboard
