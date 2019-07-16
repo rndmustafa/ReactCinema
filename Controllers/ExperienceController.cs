@@ -35,7 +35,11 @@ namespace ReactCinema.Controllers
         public async Task<IActionResult> GetExperienceAsync(int id)
         {
             Experience experience = await _context.Experiences.FindAsync(id);
-            return Ok(experience);
+            if(experience != null)
+            {
+                return Ok(experience);
+            }
+            return NotFound(new { general = "Invalid ID supplied." });
         }
 
         [HttpPost]

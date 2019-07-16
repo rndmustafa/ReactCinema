@@ -36,7 +36,7 @@ namespace ReactCinema.Controllers
             {
                 return Ok(room);
             }
-            return NotFound(new { general = "Invalid id supplied"});
+            return NotFound(new { general = "Invalid ID supplied."});
         }
 
         [HttpPut("{id}")]

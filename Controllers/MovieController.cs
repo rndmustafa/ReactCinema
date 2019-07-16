@@ -38,7 +38,11 @@ namespace ReactCinema.Controllers
         public async Task<IActionResult> GetMovieAsync(int id)
         {
             Movie movie = await _context.Movies.FindAsync(id);
-            return Ok(movie);
+            if(movie != null)
+            {
+                return Ok(movie);
+            }
+            return NotFound(new { general = "Invalid ID supplied." });
         }
 
         [HttpPost]
@@ -110,8 +114,11 @@ namespace ReactCinema.Controllers
                 .Include(s => s.ShowtimeGroupEntries)
                   .ThenInclude(e => e.Experience)
                 .FirstAsync();
-
-            return Ok(showtimeGroup);
+            if(showtimeGroup != null)
+            {
+                return Ok(showtimeGroup);
+            }
+            return NotFound(new { general = "Invalid ID supplied." });
         }
 
         [HttpDelete("showtimegroups/{id}")]
