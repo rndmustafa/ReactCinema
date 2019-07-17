@@ -71,11 +71,19 @@ namespace ReactCinema.Controllers
         public async Task<IActionResult> DeleteRoomAsync(int id)
         {
             Room room = await _context.Rooms.FindAsync(id);
+            Dictionary<string, string> errors = new Dictionary<string, string>();
             if(room != null)
             {
-                _context.Rooms.Remove(room);
-                await _context.SaveChangesAsync();
-                return NoContent();
+                if (room.CanBeDeleted(_context, errors))
+                {
+                    _context.Rooms.Remove(room);
+                    await _context.SaveChangesAsync();
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest(errors);
+                }
             }
             return NotFound();
         }

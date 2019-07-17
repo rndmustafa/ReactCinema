@@ -78,11 +78,19 @@ namespace ReactCinema.Controllers
         public async Task<IActionResult> DeleteMovieAsync(int id)
         {
             Movie movie = await _context.Movies.FindAsync(id);
+            Dictionary<string, string> errors = new Dictionary<string, string>();
             if(movie != null)
             {
-                _context.Movies.Remove(movie);
-                await _context.SaveChangesAsync();
-                return NoContent();
+                if(movie.CanBeDeleted(_context,errors))
+                {
+                    _context.Movies.Remove(movie);
+                    await _context.SaveChangesAsync();
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest(errors);
+                }
             }
             return NotFound();
         }
@@ -126,11 +134,19 @@ namespace ReactCinema.Controllers
         public async Task<IActionResult> DeleteShowtimeGroupAsync(int id)
         {
             ShowtimeGroup group = await _context.ShowtimeGroups.FindAsync(id);
+            Dictionary<string, string> errors = new Dictionary<string, string>();
             if(group != null)
             {
-                _context.ShowtimeGroups.Remove(group);
-                await _context.SaveChangesAsync();
-                return NoContent();
+                if(group.CanBeDeleted(_context,errors))
+                {
+                    _context.ShowtimeGroups.Remove(group);
+                    await _context.SaveChangesAsync();
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest(errors);
+                }
             }
             return NotFound();
         }

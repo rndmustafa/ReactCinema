@@ -149,5 +149,21 @@ namespace ReactCinema.Models
         {
             throw new NotImplementedException();
         }
+
+        public bool CanBeDeleted(ReactCinemaDbContext context, Dictionary<string, string> errors)
+        {
+            DateTime current = DateTime.Now;
+            Reservation reservation = context.Reservations
+                .Where(r => r.Showtime.ShowtimeGroupEntry.ShowtimeGroup.ShowtimeGroupID == ShowtimeGroupID
+                && current < r.Showtime.EndTime)
+                .FirstOrDefault();
+
+            if (reservation != null)
+            {
+                errors.Add("general", $"Reservation {reservation.ReservationID} holds a showtime associated with this group.");
+                return false;
+            }
+            return true;
+        }
     }
 }

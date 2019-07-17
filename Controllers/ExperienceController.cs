@@ -74,11 +74,19 @@ namespace ReactCinema.Controllers
         public async Task<IActionResult> DeleteExperienceAsync(int id)
         {
             Experience experience = await _context.Experiences.FindAsync(id);
-            if(experience != null)
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            if (experience != null)
             {
-                _context.Experiences.Remove(experience);
-                await _context.SaveChangesAsync();
-                return NoContent();
+                if(experience.CanBeDeleted(_context,errors))
+                {
+                    _context.Experiences.Remove(experience);
+                    await _context.SaveChangesAsync();
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest(errors);
+                }
             }
             return NotFound();
         }

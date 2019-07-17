@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReactCinema.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,5 +17,18 @@ namespace ReactCinema.Models
         public virtual ICollection<Showtime> Showtimes { get; set; }
         public virtual Layout Layout { get; set; }
 
+        public bool CanBeDeleted(ReactCinemaDbContext context, Dictionary<string, string> errors)
+        {
+            Showtime showtime = context.Showtimes
+                .Where(s => s.RoomID == RoomID)
+                .FirstOrDefault();
+
+            if(showtime != null)
+            {
+                errors.Add("general", "The showtimes using this room need to be removed first.");
+                return false;
+            }
+            return true;
+        }
     }
 }

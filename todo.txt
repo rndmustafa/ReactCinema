@@ -1,6 +1,6 @@
 ﻿Auth.js, 60: Debug renewing auth issue
 ShowtimeForm.js, 123: Possibly remove the need for setRelatedFields
-ShowtimeGroup.cs, 125: Implemented UpdateEntries function
+ShowtimeGroup.cs, 125: Implemented UpdateEntries function. Will need to check if deleted showtimes have reservations.
 Finish Movie Detail Page
 Create reserve ticket pages
 Fix issues with responsiveness
@@ -8,7 +8,9 @@ Add Pagination
 Admin Info Page
 Adjust connection strings and Auth0 settings for production environment
 validate fields
-make sure that item being deleted isn't being used
+Add experiences to Room Form
+  Adjust showtimegroup form so only experiences associated with 
+  room can be selected
 
 Finished:
 ShowtimeGroup.cs: Check for scheduling conflicts with other movies
@@ -18,3 +20,4 @@ Add capacity to room model
 Home.js: Only display movies that have showtimes on the showDate
 Finish Room Page in dashboard
 Error handling on get routes
+make sure that item being deleted isn't being used
