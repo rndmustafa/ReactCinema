@@ -22,13 +22,15 @@ namespace ReactCinema.Models
 
         public bool CanBeDeleted(ReactCinemaDbContext context, Dictionary<string, string> errors)
         {
-            Showtime showtime = context.Showtimes
-                .Where(s => s.MovieID == MovieID)
+            DateTime current = DateTime.Now;
+            Reservation reservation = context.Reservations
+                .Where(r => r.Showtime.MovieID == MovieID
+                && current < r.Showtime.EndTime)
                 .FirstOrDefault();
 
-            if (showtime != null)
+            if (reservation != null)
             {
-                errors.Add("general", "The showtimes using this movie need to be removed first.");
+                errors.Add("general", "Active reservations exist on this movie.");
                 return false;
             }
             return true;
