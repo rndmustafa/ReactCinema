@@ -96,8 +96,7 @@ function ShowtimeForm(props) {
 
     let shortId = newEntries[index].shortIdentification;
     if (error[shortId]) {
-      let newError = { ...error };
-      delete newError[shortId];
+      let newError = { ...error, shortId:'' };
       setError(newError);
     }
   
@@ -129,9 +128,10 @@ function ShowtimeForm(props) {
     return newGroup;
   };
 
-  const validateFromDate = (value) => {
+  const validateDates = (field,value) => {
     let errorFromDate = '';
-    if (moment(value,'YYYY-MM-DD') > moment(toDate,'YYYY-MM-DD')) {
+    if ((field === 'fromDate' && moment(value, 'YYYY-MM-DD') > moment(toDate, 'YYYY-MM-DD'))
+      || (field === 'toDate' && moment(fromDate, 'YYYY-MM-DD') > moment(value, 'YYYY-MM-DD'))) {
       errorFromDate = 'From Date must be before or equal to To Date.';
     }
     setError({ ...error, fromDate: errorFromDate });
@@ -217,7 +217,7 @@ function ShowtimeForm(props) {
               type='date'
               label='From Date'
               value={fromDate}
-              onChange={e => { setFromDate(e.target.value); validateFromDate(e.target.value); }}
+              onChange={e => { setFromDate(e.target.value); validateDates('fromDate',e.target.value); }}
               margin='normal'
               InputLabelProps={{
                 shrink: true,
@@ -229,7 +229,7 @@ function ShowtimeForm(props) {
               type='date'
               label='To Date'
               value={toDate}
-              onChange={e => setToDate(e.target.value)}
+              onChange={e => { setToDate(e.target.value); validateDates('toDate', e.target.value); }}
               margin='normal'
               InputLabelProps={{
                 shrink: true,
@@ -239,7 +239,8 @@ function ShowtimeForm(props) {
           {entries.map((entry, index) => (
             <div className={classes.flexRow} key={entry.shortIdentification}>
               <TextField
-                error={entry.startTime.length === 0 || entry.shortIdentification in error}
+                error={entry.startTime.length === 0 ||
+                  (entry.shortIdentification in error && error[entry.shortIdentification] !== '')}
                 id='startTime'
                 label={index === 0 ? 'Start Time' : ''}
                 type='time'
