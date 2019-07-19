@@ -35,5 +35,16 @@ namespace ReactCinema.Models
             }
             return true;
         }
+
+        public Dictionary<string, string> Validate()
+        {
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            if(Title == "" || ImageUrl == "" || TrailerUrl == "" || 
+                Rating == "" || Duration == 0 || ReleaseDate == DateTime.MinValue || Synopsis == "")
+            {
+                errors.Add("general", "Fill out all fields.");
+            }
+            return errors;
+        }
     }
 }

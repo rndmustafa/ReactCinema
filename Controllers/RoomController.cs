@@ -48,22 +48,32 @@ namespace ReactCinema.Controllers
                 return BadRequest(new { general = "Failed to update room." });
             }
 
-            _context.Entry(updatedRoom).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
+            Dictionary<string, string> errors = updatedRoom.Validate();
+            if(errors.Count == 0)
+            {
+                _context.Entry(updatedRoom).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            return BadRequest(errors);
         }
 
         [HttpPost]
         [Authorize("edit:data")]
         public async Task<IActionResult> PostRoomAsync([FromBody] Room room)
         {
-            if(room != null)
+            if(room == null)
+            {
+                return BadRequest(new { general = "Failed to create room." });
+            }
+            Dictionary<string, string> errors = room.Validate();
+            if (errors.Count == 0)
             {
                 _context.Rooms.Add(room);
                 await _context.SaveChangesAsync();
                 return CreatedAtRoute("GetRoom", new { id = room.RoomID }, room);
             }
-            return BadRequest(new { general = "Failed to create room." });
+            return BadRequest(errors);
         }
 
         [HttpDelete("{id}")]

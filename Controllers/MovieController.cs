@@ -49,13 +49,19 @@ namespace ReactCinema.Controllers
         [Authorize("edit:data")]
         public async Task<IActionResult> PostMovieAsync([FromBody] Movie newMovie)
         {
-            if(newMovie != null)
+            if(newMovie == null)
+            {
+                return BadRequest(new { general = "There was an unexpected error. Try again later." });
+            }
+
+            Dictionary<string,string> errors = newMovie.Validate();
+            if(errors.Count == 0)
             {
                 _context.Movies.Add(newMovie);
                 await _context.SaveChangesAsync();
                 return CreatedAtRoute("GetMovie", new { id = newMovie.MovieID }, newMovie);
             }
-            return BadRequest(new { general = "There was an unexpected error. Try again later." });
+            return BadRequest(errors);
         }
 
         [HttpPut("{id}")]
@@ -67,10 +73,14 @@ namespace ReactCinema.Controllers
                 return BadRequest(new { general = "There was an unexpected error. Try again later." });
             }
 
-            _context.Entry(movie).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            Dictionary<string, string> errors = movie.Validate();
+            if(errors.Count == 0)
+            {
+                _context.Entry(movie).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            return BadRequest(errors);
         }
 
         [HttpDelete("{id}")]

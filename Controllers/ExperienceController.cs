@@ -46,13 +46,18 @@ namespace ReactCinema.Controllers
         [Authorize("edit:data")]
         public async Task<IActionResult> PostExperienceAsync([FromBody] Experience experience)
         {
-            if(experience != null)
+            if(experience == null)
+            {
+                return BadRequest(new { general = "Failed to create new experience" });
+            }
+            Dictionary<string, string> errors = experience.Validate();
+            if (errors.Count == 0)
             {
                 _context.Experiences.Add(experience);
                 await _context.SaveChangesAsync();
                 return CreatedAtRoute("GetExperience",new { id = experience.ExperienceID }, experience);
             }
-            return BadRequest(new { general = "Failed to create new experience" });
+            return BadRequest(errors);
         }
 
         [HttpPut("{id}")]
@@ -64,9 +69,14 @@ namespace ReactCinema.Controllers
                 return BadRequest(new { general = "Failed to update experience" });
             }
 
-            _context.Entry(experience).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
+            Dictionary<string, string> errors = experience.Validate();
+            if(errors.Count == 0)
+            {
+                _context.Entry(experience).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            return BadRequest(errors);
         }
 
         [HttpDelete("{id}")]

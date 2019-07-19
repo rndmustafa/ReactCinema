@@ -14,6 +14,16 @@ namespace ReactCinema.Models
         public virtual ICollection<RoomToExperience> RoomToExperiences { get; set; }
         public virtual ICollection<Showtime> Showtimes { get; set; }
 
+        public Dictionary<string, string> Validate()
+        {
+            Dictionary<string, string> errors = new Dictionary<string, string>();
+            if (Title == "")
+            {
+                errors.Add("general", "Please fill all fields.");
+            }
+            return errors;
+        }
+
         public bool CanBeDeleted(ReactCinemaDbContext context, Dictionary<string, string> errors)
         {
             Showtime showtime = context.Showtimes
