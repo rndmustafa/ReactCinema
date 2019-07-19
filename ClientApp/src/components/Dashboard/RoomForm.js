@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import { fetchCreateItem, fetchPutItem } from '../../util/fetchCalls';
@@ -79,22 +79,24 @@ function RoomForm(props) {
   let titleText = roomData ? 'Edit Room' : 'New Room';
 
   return (
-    <form style={{ display: "flex", flexDirection: "column" }} onSubmit={(e) => handleSubmit(e)}>
+    <ValidatorForm style={{ display: "flex", flexDirection: "column" }} onSubmit={(e) => handleSubmit(e)}>
       <Typography variant='h6' gutterBottom align='center'>{titleText}</Typography>
-      <TextField
-        required
+      <TextValidator
         id='title'
         label='Title'
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        validators={['required']}
+        errorMessages={['This field is required']}
         margin='normal'
         variant='outlined' />
-      <TextField
-        required
+      <TextValidator
         id='capacity'
         label='Capacity'
         value={capacity}
         onChange={(e) => setCapacity(e.target.value)}
+        validators={['required', 'isNumber', 'minNumber:1']}
+        errorMessages={['This field is required', 'This must be a number', 'Must be a positive non-zero number']}
         margin='normal'
         variant='outlined' />
       {error.general && (
@@ -111,7 +113,7 @@ function RoomForm(props) {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
         </div>)}
-    </form>
+    </ValidatorForm>
   );
 }
 

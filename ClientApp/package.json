@@ -9,6 +9,7 @@
     "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-material-ui-form-validator": "^2.0.9",
     "react-router-dom": "^5.0.0",
     "react-scripts": "1.0.17",
     "rimraf": "^2.6.3",

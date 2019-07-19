@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import getMovieData from '../../util/getMovieData';
@@ -41,21 +41,23 @@ function MovieForm(props) {
     }
   }, []);
 
-  const handleCreate = (data,token) => {
+  const handleCreate = (data, token) => {
+    let response;
     fetchCreateItem('api/movie',data,token)
       .then(res => {
         setLoading(false);
-        if (res.status === 201) {
-          return res.json();
-        }
-        else {
-          setError({ general: 'Failed to create new movie'});
-        }
+        response = res;
+        return res.json();
       })
       .then(data => {
-        handleItemAdd(data);
-        if (setOpen) {
-          setOpen(false);
+        if (response.ok) {
+          handleItemAdd(data);
+          if (setOpen) {
+            setOpen(false);
+          }
+        }
+        else {
+          setError(data);
         }
       })
       .catch(err => {
@@ -64,12 +66,12 @@ function MovieForm(props) {
       });
   };
 
-  const handleUpdate = (data,token) => {
+  const handleUpdate = (data, token) => {
     fetchPutItem(`api/movie/${movieData.movieID}`,data,token)
       .then(res => {
         setLoading(false);
-        if (res.status === 400) {
-          setError({ general: 'Failed to create new movie' });
+        if (!res.ok) {
+          res.json().then(data => setError(data));
         }
         else {
           handleItemUpdate(data);
@@ -108,79 +110,86 @@ function MovieForm(props) {
   };
 
   return (
-    <form style={{ display: "flex", flexDirection: "column", maxWidth: 300 }} onSubmit={(e) => handleSubmit(e)}>
-      <TextField
-        required
+    <ValidatorForm style={{ display: "flex", flexDirection: "column", maxWidth: 300 }} onSubmit={(e) => handleSubmit(e)}>
+      <TextValidator
         id='title'
         label='Title'
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        validators={['required']}
+        errorMessages={['This field is required']}
         margin='normal'
         variant='outlined' />
       <Button color="primary" variant="contained" disabled={title.length === 0} onClick={handleDataClick}>
         {!movieFetchLoading && 'Get Movie Data'}
         {movieFetchLoading && <CircularProgress color="secondary" />}
       </Button>
-      <TextField
-        required
+      <TextValidator
         id='imageUrl'
         label='Image Url'
         value={imageUrl}
         onChange={(e) => setImageUrl(e.target.value)}
+        validators={['required', 'matchRegexp:^https?:\/\/.*']}
+        errorMessages={['This field is required', 'Must be a url']}
         margin='normal'
         variant='outlined' />
-      <TextField
-        required
+      <TextValidator
         id='trailerUrl'
         label='Trailer Url'
         value={trailerUrl}
         onChange={(e) => setTrailerUrl(e.target.value)}
+        validators={['required', 'matchRegexp:^https?:\/\/.*']}
+        errorMessages={['This field is required', 'Must be a url']}
         margin='normal'
         variant='outlined' />
-      <TextField
-        required
+      <TextValidator
         id='rating'
         label='Rating'
         value={rating}
         onChange={(e) => setRating(e.target.value)}
         margin='normal'
+        validators={['required']}
+        errorMessages={['This field is required']}
         placeholder='PG-13'
         variant='outlined' />
-      <TextField
-        required
+      <TextValidator
         id='duration'
         label='Duration (minutes)'
         value={duration}
         onChange={(e) => setDuration(e.target.value)}
         margin='normal'
+        validators={['required', 'isNumber','minNumber:1']}
+        errorMessages={['This field is required','This must be a number','Must be a positive non-zero number.']}
         placeholder='90'
         variant='outlined' />
-      <TextField
-        required
+      <TextValidator
         id='releaseDate'
         type="date"
         label='Release Date'
         value={releaseDate}
         onChange={e => setReleaseDate(e.target.value)}
         margin='normal'
+        validators={['required']}
+        errorMessages={['This field is required']}
         placeholder='2018-05-20'
         InputLabelProps={{
           shrink: true,
         }}
         variant='outlined' />
-      <TextField
-        required
+      <TextValidator
         multiline
         rowsMax="6"
         id='synopsis'
         label='Synopsis'
         value={synopsis}
         onChange={(e) => setSynopsis(e.target.value)}
+        validators={['required']}
+        errorMessages={['This field is required']}
         margin='normal'
         variant='outlined' />
       {error.general && (
         <Typography variant="body1" style={{ color: "red" }}>
-          There was an unexpected error. Try again later.
+          {error.general}
         </Typography>
       )}
       {!loading && (
@@ -192,7 +201,7 @@ function MovieForm(props) {
       <div style={{ display: "flex", justifyContent: "center", marginTop:10 }}>
         <CircularProgress />
       </div>)}
-    </form>
+    </ValidatorForm>
     );
 }
 
