@@ -239,6 +239,7 @@ namespace ReactCinema.Models
 
             foreach (ShowtimeGroupEntry entry in entriesToCreate)
             {
+                entry.ShowtimeGroupEntryID = 0;
                 entry.GenerateShowtimes(Movie, FromDate, ToDate);
                 ShowtimeGroupEntries.Add(entry);
             }
