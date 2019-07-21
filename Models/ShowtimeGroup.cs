@@ -211,14 +211,16 @@ namespace ReactCinema.Models
         private void UpdateGroupEntries(ShowtimeGroup updatedGroup)
         {
             List<ShowtimeGroupEntry> entriesToDelete = ShowtimeGroupEntries
-                .Where(e => !updatedGroup.ShowtimeGroupEntries.Any(ue => e.StartTime == ue.StartTime 
+                .Where(e => !updatedGroup.ShowtimeGroupEntries.Any(ue => (e.StartTime == ue.StartTime 
                 && e.RoomID == ue.RoomID 
-                && e.ExperienceID == ue.ExperienceID))
+                && e.ExperienceID == ue.ExperienceID) 
+                || (e.ShowtimeGroupEntryID == ue.ShowtimeGroupEntryID) ))
                 .ToList();
             List<ShowtimeGroupEntry> entriesToCreate = updatedGroup.ShowtimeGroupEntries
-                .Where(ue => !ShowtimeGroupEntries.Any(e => e.StartTime == ue.StartTime 
+                .Where(ue => !ShowtimeGroupEntries.Any(e => (e.StartTime == ue.StartTime 
                 && e.RoomID == ue.RoomID 
-                && e.ExperienceID == ue.ExperienceID))
+                && e.ExperienceID == ue.ExperienceID)
+                || (e.ShowtimeGroupEntryID == ue.ShowtimeGroupEntryID)))
                 .ToList();
 
             foreach(ShowtimeGroupEntry entry in entriesToDelete)
@@ -239,7 +241,6 @@ namespace ReactCinema.Models
 
             foreach (ShowtimeGroupEntry entry in entriesToCreate)
             {
-                entry.ShowtimeGroupEntryID = 0;
                 entry.GenerateShowtimes(Movie, FromDate, ToDate);
                 ShowtimeGroupEntries.Add(entry);
             }
