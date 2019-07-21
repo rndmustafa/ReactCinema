@@ -4,8 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -28,11 +26,7 @@ function Navbar(props) {
   return (
     <AppBar position="static">
       <Toolbar className={classes.bar}>
-        <div>
-          <IconButton color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
-        </div>
+        <div/>
         <div>
           <Button color="inherit" component={Link} to="/">Home</Button>
           {
@@ -53,7 +47,7 @@ function Navbar(props) {
                 onClick={(e) => setAnchorEl(e.currentTarget)}>
                 {userData.email}
               </Button>
-                <Menu id="simple-menu" className={classes.menu} anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+              <Menu id="simple-menu" className={classes.menu} anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
                   <MenuItem onClick={() => auth.logout(setUserData,setLoading)}>Logout</MenuItem>
               </Menu>
               </div>
