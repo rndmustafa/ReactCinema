@@ -25,22 +25,7 @@ namespace ReactCinema.Models
             }
             foreach (ShowtimeGroupEntry entry in ShowtimeGroupEntries)
             {
-                entry.SetInterval();
-                entry.Showtimes = new List<Showtime>();
-                for(DateTime date = FromDate; date <= ToDate; date = date.AddDays(1))
-                {
-                    DateTime showtimeDate = date.Date + entry.Interval;
-                    Showtime newShowtime = new Showtime()
-                    {
-                        MovieID = this.MovieID,
-                        StartTime = showtimeDate,
-                        EndTime = showtimeDate.AddMinutes(Movie.Duration),
-                        RoomID = entry.RoomID,
-                        Soldout = false,
-                        ExperienceID = entry.ExperienceID
-                    };
-                    entry.Showtimes.Add(newShowtime);
-                }
+                entry.GenerateShowtimes(Movie, FromDate, ToDate);
             }
         }
 
@@ -59,16 +44,16 @@ namespace ReactCinema.Models
                 return true;
             }
 
-            ShowtimeGroupEntries.OrderBy(e => e.RoomID).ThenBy(e => e.StartTime);
-            for(int i = 0; i < ShowtimeGroupEntries.Count; i++)
+            List<ShowtimeGroupEntry> orderedEntries = ShowtimeGroupEntries.OrderBy(e => e.RoomID).ThenBy(e => e.StartTime).ToList();
+            for(int i = 0; i < orderedEntries.Count; i++)
             {
-                if(i == ShowtimeGroupEntries.Count-1)
+                if(i == orderedEntries.Count-1)
                 {
                     break;
                 }
-                else if(ShowtimeGroupEntries[i].Conflicts(ShowtimeGroupEntries[i+1], Movie.Duration))
+                else if(orderedEntries[i].Conflicts(orderedEntries[i+1], Movie.Duration))
                 {
-                    errors.Add(ShowtimeGroupEntries[i].ShortIdentification, "This overlaps with the next entry in the same room.");
+                    errors.Add(orderedEntries[i].ShortIdentification, "This overlaps with the next entry in the same room.");
                 }
             }
 
@@ -128,6 +113,40 @@ namespace ReactCinema.Models
             return true;
         }
 
+        private bool ActiveReservationsFound(Dictionary<string, string> errors, ReactCinemaDbContext context)
+        {
+            DateTime current = DateTime.Now;
+            List<Reservation> reservations = context.Reservations
+                .Where(r => r.Showtime.ShowtimeGroupEntry.ShowtimeGroup.ShowtimeGroupID == ShowtimeGroupID
+                && current < r.Showtime.EndTime)
+                .Include(r => r.Showtime)
+                .ToList();
+
+            foreach(Reservation reservation in reservations)
+            {
+                DateTime reservationDate = reservation.Showtime.StartTime;
+                if (reservationDate < FromDate || reservationDate > ToDate)
+                {
+                    errors.Add("general", $"This update would remove active reservation {reservation.ReservationID}");
+                    return true;
+                }
+                foreach(ShowtimeGroupEntry entry in ShowtimeGroupEntries)
+                {
+                    if(reservationDate.TimeOfDay == TimeSpan.Parse(entry.StartTime)
+                        && reservation.Showtime.ExperienceID == entry.ExperienceID
+                        && reservation.Showtime.RoomID == entry.RoomID)
+                    {
+                        return false;
+                    }
+                }
+
+                errors.Add("general", $"This update would remove active reservation {reservation.ReservationID}");
+                return true;
+            }
+
+            return false;
+        }
+
         public Dictionary<string,string> Validate(ReactCinemaDbContext context)
         {
             if(Movie == null)
@@ -141,13 +160,88 @@ namespace ReactCinema.Models
                 return errors;
             }
 
+            if(ShowtimeGroupID != 0)
+            {
+                ActiveReservationsFound(errors, context);
+            }
+
             return errors; 
         }
 
 
         public void UpdateEntries(ShowtimeGroup updatedGroup)
         {
-            throw new NotImplementedException();
+            if(updatedGroup.FromDate < FromDate)
+            {
+                foreach (ShowtimeGroupEntry entry in ShowtimeGroupEntries)
+                {
+                    DateTime earlier = updatedGroup.ToDate < FromDate.AddDays(-1) ? ToDate : FromDate.AddDays(-1);
+                    entry.GenerateShowtimes(Movie, updatedGroup.FromDate, earlier);
+                }
+            }
+            else if (updatedGroup.FromDate > FromDate)
+            {
+                foreach (ShowtimeGroupEntry entry in ShowtimeGroupEntries)
+                {
+                    entry.RemoveShowtimes(FromDate, updatedGroup.FromDate.AddDays(-1));
+                }
+            }
+            FromDate = updatedGroup.FromDate;
+
+            if (updatedGroup.ToDate < ToDate)
+            {
+                foreach (ShowtimeGroupEntry entry in ShowtimeGroupEntries)
+                {
+                    entry.RemoveShowtimes(updatedGroup.ToDate.AddDays(1), ToDate);
+                }
+            }
+            else if (updatedGroup.ToDate > ToDate)
+            {
+                foreach (ShowtimeGroupEntry entry in ShowtimeGroupEntries)
+                {
+                    DateTime later = ToDate.AddDays(1) > updatedGroup.FromDate ? ToDate.AddDays(1) : updatedGroup.FromDate;
+                    entry.GenerateShowtimes(Movie, later, updatedGroup.ToDate);
+                }
+            }
+            ToDate = updatedGroup.ToDate;
+
+            UpdateGroupEntries(updatedGroup);
+        }
+
+        private void UpdateGroupEntries(ShowtimeGroup updatedGroup)
+        {
+            List<ShowtimeGroupEntry> entriesToDelete = ShowtimeGroupEntries
+                .Where(e => !updatedGroup.ShowtimeGroupEntries.Any(ue => e.StartTime == ue.StartTime 
+                && e.RoomID == ue.RoomID 
+                && e.ExperienceID == ue.ExperienceID))
+                .ToList();
+            List<ShowtimeGroupEntry> entriesToCreate = updatedGroup.ShowtimeGroupEntries
+                .Where(ue => !ShowtimeGroupEntries.Any(e => e.StartTime == ue.StartTime 
+                && e.RoomID == ue.RoomID 
+                && e.ExperienceID == ue.ExperienceID))
+                .ToList();
+
+            foreach(ShowtimeGroupEntry entry in entriesToDelete)
+            {
+                ShowtimeGroupEntries.Remove(entry);
+            }
+
+            foreach (ShowtimeGroupEntry entry in ShowtimeGroupEntries)
+            {
+                ShowtimeGroupEntry updatedEntry = updatedGroup.ShowtimeGroupEntries
+                    .Where(e => e.ShowtimeGroupEntryID == entry.ShowtimeGroupEntryID)
+                    .SingleOrDefault();
+                if(updatedEntry != null)
+                {
+                    entry.UpdateData(updatedEntry, Movie.Duration);
+                }
+            }
+
+            foreach (ShowtimeGroupEntry entry in entriesToCreate)
+            {
+                entry.GenerateShowtimes(Movie, FromDate, ToDate);
+                ShowtimeGroupEntries.Add(entry);
+            }
         }
 
         public bool CanBeDeleted(ReactCinemaDbContext context, Dictionary<string, string> errors)

@@ -163,14 +163,20 @@ function ShowtimeForm(props) {
   };
 
   const handleUpdate = (formData, token) => {
+    let response;
     fetchPutItem(`api/movie/showtimegroups/${groupData.showtimeGroupID}`,
       formData, token)
       .then(res => {
+        response = res;
+        return res.json();
+      })
+      .then(data => {
         setLoading(false);
-        if (res.status === 400) {
-          res.json().then(data => setError(data));
+        if (response.status === 400) {
+          setError(data);
         }
         else {
+          formData.showtimeGroupEntries = data.showtimeGroupEntries;
           handleItemUpdate(setRelatedFields(formData));
           if (setOpen) {
             setOpen(false);
@@ -178,6 +184,7 @@ function ShowtimeForm(props) {
         }
       })
       .catch(err => {
+        setLoading(false);
         setError({ general: 'There was an unexpected error. Try again later.' });
         console.log(err);
       });
@@ -251,7 +258,7 @@ function ShowtimeForm(props) {
                   shrink: true,
                 }}
                 inputProps={{
-                  step: 300,
+                  step: 60,
                 }} />
               <FormControl required style={{ marginRight: '15px', minWidth: 90 }}>
                 {index === 0 && <InputLabel htmlFor="room-required">Room</InputLabel>}

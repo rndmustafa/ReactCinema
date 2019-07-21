@@ -176,12 +176,17 @@ namespace ReactCinema.Controllers
                     .Where(g => g.ShowtimeGroupID == id)
                     .Include(g => g.ShowtimeGroupEntries)
                       .ThenInclude(e => e.Showtimes)
+                    .Include(g => g.Movie)
                     .SingleAsync();
 
                 group.UpdateEntries(UpdatedGroup);
                 await _context.SaveChangesAsync();
 
-                return NoContent();
+                foreach(ShowtimeGroupEntry entry in group.ShowtimeGroupEntries)
+                {
+                    entry.Showtimes = null;
+                }
+                return Created($"api/movie/showtimegroups/{id}", group);
             }
             return BadRequest(errors);
         }
