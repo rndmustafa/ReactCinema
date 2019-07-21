@@ -21,7 +21,7 @@ const style = {
     display: 'flex',
     flexDirection: 'column',
     padding: '5px 5px 5px 5px',
-    marginRight: 8
+    margin: '0px 8px 8px 0px'
   },
   flexRowSpace: {
     display: 'flex',
@@ -40,8 +40,9 @@ function ShowtimeGroup(props) {
   const formatTime = (time) => {
     let timeArray = time.split(':');
     let hour = parseInt(timeArray[0],10);
-    let suffix = hour > 12 ? 'PM' : 'AM';
-    return `${hour%12}:${timeArray[1]} ${suffix}`;
+    let suffix = hour >= 12 ? 'PM' : 'AM';
+    hour = hour === 0 || hour === 12 ? 12 : hour % 12;
+    return `${hour}:${timeArray[1]} ${suffix}`;
   };
 
   let headerDate = formatHeaderDate(groupData.fromDate);
