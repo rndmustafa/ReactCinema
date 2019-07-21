@@ -29,7 +29,7 @@ function Dashboard(props) {
   return (
     <div className={classes.flexCol}>
       <Grid container direction="row" justify="center" style={{ maxWidth: 1200 }}>
-        <Grid item xs={3}>
+        <Grid item sm={3}>
           <List component="nav">
             <ListItem button component={Link} to={`${match.url}/movies`}>
               <ListItemIcon>
@@ -51,7 +51,7 @@ function Dashboard(props) {
             </ListItem>
           </List>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item sm={9}>
           <Route exact path={`${match.path}`} render={() => {
             return (
               <div>

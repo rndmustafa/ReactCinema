@@ -298,7 +298,7 @@ function ShowtimeForm(props) {
         </div>
         <div className={classes.submitSection}>
           {error.general && (
-            <Typography variant='body1' style={{ color: 'red', textAlign:'center' }}>
+            <Typography variant='body1' align='center' style={{ color: 'red'}}>
               {error.general}
             </Typography>
           )}

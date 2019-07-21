@@ -17,6 +17,18 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center'
+  },
+  searchContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderWidth: '2px 0px 2px 0px',
+    borderColor: 'rgb(166,166,166)',
+    borderStyle: 'solid'
+  },
+  form: {
+    maxWidth: '800px',
+    width: '100%'
   }
 });
 
@@ -27,8 +39,8 @@ function Home(props) {
   return (
     <div className={classes.flexCol} >
       <Typography variant='h4' style={{ marginBottom: 8 }}>What's Showing</Typography>
-      <form noValidate onSubmit={e => e.preventDefault()} >
-        <div className={classes.flexRow} style={{width:800}}>
+      <form noValidate className={classes.form} onSubmit={e => e.preventDefault()} >
+        <div className={classes.flexRow}>
           <DateRange fontSize='large' style={{ marginRight: 8 }} />
           <TextField
             id='date'
@@ -38,11 +50,10 @@ function Home(props) {
             InputLabelProps={{ shrink: true }}
           />
         </div>
-        <hr style={{ margin: 6 }} />
-        <div className={classes.flexRow}>
+        <div className={classes.searchContainer}>
           <TextField
             id='outlined-full-width'
-            style={{ margin: 8, width:500 }}
+            style={{ margin: 8, maxWidth:'500px',width:'100%' }}
             placeholder='Search'
             value={searchFilter}
             onChange={e => setSearchFilter(e.target.value)}
@@ -53,7 +64,6 @@ function Home(props) {
             }}
           />
         </div>
-        <hr style={{ margin: 6 }} />
       </form>
       <MovieGrid searchFilter={searchFilter} showDate={showdate} />
     </div>
