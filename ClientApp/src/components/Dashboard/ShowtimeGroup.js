@@ -5,6 +5,7 @@ import moment from 'moment';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import ClearIcon from '@material-ui/icons/Clear';
+import ShowtimeBlock from '../MovieDetail/ShowtimeBlock';
 
 const style = {
   container: {
@@ -15,18 +16,10 @@ const style = {
     display: 'flex',
     flexWrap:'wrap'
   },
-  block: {
-    width: 120,
-    border: '2px solid #e4e4e2',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '5px 5px 5px 5px',
-    margin: '0px 8px 8px 0px'
-  },
   flexRowSpace: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems:'center'
+    alignItems: 'center'
   }
 };
 
@@ -35,14 +28,6 @@ function ShowtimeGroup(props) {
 
   const formatHeaderDate = (date) => {
     return moment(date).format('MMMM DD YYYY');
-  };
-
-  const formatTime = (time) => {
-    let timeArray = time.split(':');
-    let hour = parseInt(timeArray[0],10);
-    let suffix = hour >= 12 ? 'PM' : 'AM';
-    hour = hour === 0 || hour === 12 ? 12 : hour % 12;
-    return `${hour}:${timeArray[1]} ${suffix}`;
   };
 
   let headerDate = formatHeaderDate(groupData.fromDate);
@@ -55,14 +40,12 @@ function ShowtimeGroup(props) {
       <div>
         <Typography variant='h6'>{headerDate}</Typography>
       <div className={classes.blockContainer}>
-        {groupData.showtimeGroupEntries.map(entry => (
-          <div key={entry.showtimeGroupEntryID} className={classes.block}>
-            <Typography variant='body1'>{formatTime(entry.startTime)}</Typography>
-            <div className={classes.flexRowSpace}>
-              <Typography variant='subtitle2'>Room {entry.room.title}</Typography>
-              <Typography variant='subtitle2'>{entry.experience.title}</Typography>
-            </div>
-          </div>
+          {groupData.showtimeGroupEntries.map(entry => (
+            <ShowtimeBlock
+              key={entry.showtimeGroupEntryID}
+              time={entry.startTime}
+              roomTitle={entry.room.title}
+              experienceTitle={entry.experience.title} />
           ))}
         </div>
       </div>
