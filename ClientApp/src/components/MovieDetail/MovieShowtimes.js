@@ -19,7 +19,12 @@ function MovieShowtimes(props) {
   useEffect(() => {
     fetch(`api/movie/${movieID}/showtimes?date=${currentDate.format()}`)
       .then(res => res.json())
-      .then(data => setShowtimes(data));
+      .then(data => {
+        for (let showtime of data) {
+          showtime.faded = currentDate > moment(showtime.startTime) || showtime.soldout;
+        }
+        setShowtimes(data);
+      });
   }, []);
 
   return (
@@ -35,7 +40,9 @@ function MovieShowtimes(props) {
           key={showtime.showtimeID}
           time={moment(showtime.startTime).format('HH:mm:ss')}
           roomTitle={showtime.room.title}
-          experienceTitle={showtime.experience.title} />))}
+          experienceTitle={showtime.experience.title}
+          faded={showtime.faded}
+          hover={!showtime.faded} />))}
       </div>
     </div>
   );

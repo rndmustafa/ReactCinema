@@ -9,17 +9,27 @@ const style = {
     display: 'flex',
     flexDirection: 'column',
     padding: '5px 5px 5px 5px',
-    margin: '0px 8px 8px 0px'
+    margin: '0px 8px 8px 0px',
+    transition: 'all .3s ease-out'
   },
   flexRowSpace: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  faded: {
+    opacity: 0.4
+  },
+  hover: {
+    cursor:'pointer',
+    '&:hover': {
+      border: '2px solid black'
+    }
   }
 };
 
 function ShowtimeBlock(props) {
-  const { classes, time, roomTitle, experienceTitle } = props;
+  const { classes, time, roomTitle, experienceTitle, faded,hover } = props;
 
   const formatTime = (time) => {
     let timeArray = time.split(':');
@@ -29,8 +39,16 @@ function ShowtimeBlock(props) {
     return `${hour}:${timeArray[1]} ${suffix}`;
   };
 
+  let className = `${classes.block} `;
+  if (faded) {
+    className += `${classes.faded} `;
+  }
+  if (hover) {
+    className += classes.hover;
+  }
+
   return (
-    <div className={classes.block}>
+    <div className={className}>
       <Typography variant='body1'>{formatTime(time)}</Typography>
       <div className={classes.flexRowSpace}>
         <Typography variant='subtitle2'>Room {roomTitle}</Typography>
