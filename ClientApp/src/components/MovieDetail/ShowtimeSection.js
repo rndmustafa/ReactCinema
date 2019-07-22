@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ShowtimeBlock from './ShowtimeBlock';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 const style = {
   flexWrap: {
@@ -28,16 +29,26 @@ function ShowtimeSection(props) {
   return (
     <div>
       <Typography variant='body1' gutterBottom>
-      {moment(date).format('LL')}
+        {moment(date).format('LL')}
       </Typography>
       <div className={classes.flexWrap}>
-      {showtimes.map(showtime => (<ShowtimeBlock
-        key={showtime.showtimeID}
-        time={moment(showtime.startTime).format('HH:mm:ss')}
-        roomTitle={showtime.room.title}
-        experienceTitle={showtime.experience.title}
-        faded={showtime.faded}
-        hover={!showtime.faded} />))}
+        {showtimes.map(showtime => {
+          let block = (<ShowtimeBlock
+            key={showtime.showtimeID}
+            time={moment(showtime.startTime).format('HH:mm:ss')}
+            roomTitle={showtime.room.title}
+            experienceTitle={showtime.experience.title}
+            faded={showtime.faded}
+            hover={!showtime.faded} />);
+
+          if (showtime.faded) {
+            return block;
+          }
+          return (
+            <Link key={showtime.showtimeID} to={`/reserve/${showtime.showtimeID}`} style={{ textDecoration:'none' }}>
+              {block}
+            </Link> );
+        })}
       </div>
     </div>
   );

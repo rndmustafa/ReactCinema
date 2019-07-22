@@ -7,6 +7,7 @@ import Movie from './components/MovieDetail/Movie';
 import Loading from './util/Loading';
 import AuthRoute from './util/AuthRoute';
 import Dashboard from './components/Dashboard/Dashboard';
+import Reservation from './components/Reservation/Reservation';
 
 const theme = createMuiTheme({
   typography: {
@@ -64,6 +65,7 @@ function App(props) {
       <div className='container'>
         <Route exact path='/' component={Home} />
         <Route path={'/movie/:id'} component={Movie} />
+        <Route path={['/reserve/:showtimeID','/reserve/']} component={Reservation} />
         <AuthRoute path={'/dashboard'} userData={userData} component={Dashboard} />
       </div>
     </MuiThemeProvider>
