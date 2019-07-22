@@ -37,7 +37,7 @@ function Movie(props) {
 
   return (
     <Grid container justify='center'>
-      <Grid item sm={5} container>
+      <Grid item md={5} container>
         <Grid item sm>
           <img src={movie.imageUrl} alt={movie.title} className={classes.image} />
           <TrailerModal open={modalOpen} onClose={() => setModalOpen(false)}
@@ -59,8 +59,8 @@ function Movie(props) {
             </Button>
         </Grid>
       </Grid>
-      <Grid item sm={2} />
-      <Grid item sm={5}>
+      <Grid item md={2} />
+      <Grid item md={5}>
         <MovieShowtimes movieID={movieID} movieTitle={movie.title} />
       </Grid>
     </Grid>
