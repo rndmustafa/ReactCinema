@@ -19,7 +19,7 @@ function ShowtimeSection(props) {
       .then(res => res.json())
       .then(data => {
         for (let showtime of data) {
-          showtime.faded = moment() > moment(showtime.startTime) || showtime.soldout;
+          showtime.faded = showtime.soldout || moment() > moment(showtime.startTime);
         }
         setShowtimes(data);
       });

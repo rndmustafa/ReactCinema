@@ -20,4 +20,4 @@ function MovieShowtimes(props) {
   );
 }
 
-export default MovieShowtimes;
+export default React.memo(MovieShowtimes);
