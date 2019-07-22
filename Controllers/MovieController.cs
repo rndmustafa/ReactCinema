@@ -105,6 +105,19 @@ namespace ReactCinema.Controllers
             return NotFound();
         }
 
+        [HttpGet("{id}/showtimes")]
+        public async Task<IActionResult> GetShowtimesAsync(int id, DateTime date)
+        {
+            List<Showtime> showtimes = await _context.Showtimes
+                .Where(s => s.MovieID == id && s.StartTime.Date == date.Date)
+                .Include(s => s.Room)
+                .Include(s => s.Experience)
+                .OrderBy(s => s.StartTime)
+                .ToListAsync();
+
+            return Ok(showtimes);
+        }
+
         [HttpGet("{id}/showtimegroups")]
         public async Task<IActionResult> GetShowtimeGroupsAsync(int id)
         {
