@@ -1,51 +1,23 @@
-﻿import React, { useState, useEffect } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+﻿import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
-import ShowtimeBlock from './ShowtimeBlock';
-
-const style = (theme) => ({
-  flexWrap: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-});
+import ShowtimeSection from './ShowtimeSection';
 
 function MovieShowtimes(props) {
-  let currentDate = moment();
+  const { movieID, movieTitle } = props;
 
-  const { classes, movieID, movieTitle } = props;
-  const [showtimes, setShowtimes] = useState([]);
-  useEffect(() => {
-    fetch(`api/movie/${movieID}/showtimes?date=${currentDate.format()}`)
-      .then(res => res.json())
-      .then(data => {
-        for (let showtime of data) {
-          showtime.faded = currentDate > moment(showtime.startTime) || showtime.soldout;
-        }
-        setShowtimes(data);
-      });
-  }, []);
-
+  let showtimeDates = [];
+  for (let i = 0; i < 4; i++) {
+    showtimeDates.push(moment().add(i,'days').format());
+  }
   return (
     <div>
       <Typography variant='h5' align='center' gutterBottom>
         Book tickets for {movieTitle}
       </Typography>
-      <Typography variant='body1' gutterBottom>
-        {currentDate.format('LL')}
-      </Typography>
-      <div className={classes.flexWrap}>
-        {showtimes.map(showtime => (<ShowtimeBlock
-          key={showtime.showtimeID}
-          time={moment(showtime.startTime).format('HH:mm:ss')}
-          roomTitle={showtime.room.title}
-          experienceTitle={showtime.experience.title}
-          faded={showtime.faded}
-          hover={!showtime.faded} />))}
-      </div>
+      {showtimeDates.map(date => <ShowtimeSection key={date} date={date} movieID={movieID} />)}
     </div>
   );
 }
 
-export default withStyles(style)(MovieShowtimes);
+export default MovieShowtimes;
