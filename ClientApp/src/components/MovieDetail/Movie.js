@@ -36,14 +36,14 @@ function Movie(props) {
   }
 
   return (
-    <Grid container justify='center'>
-      <Grid item md={5} container>
-        <Grid item sm>
+    <Grid container spacing={40} justify='center'>
+      <Grid item md={7} container>
+        <Grid item sm={5}>
           <img src={movie.imageUrl} alt={movie.title} className={classes.image} />
           <TrailerModal open={modalOpen} onClose={() => setModalOpen(false)}
             trailerUrl={movie.trailerUrl} movieTitle={movie.title} />
         </Grid>
-        <Grid item sm style={{ marginLeft: 10 }}>
+        <Grid item sm={7}>
           <Typography variant='subtitle2' gutterBottom>Rating:
               <Typography variant='body2' inline> {movie.rating}</Typography>
           </Typography>
@@ -59,7 +59,6 @@ function Movie(props) {
             </Button>
         </Grid>
       </Grid>
-      <Grid item md={2} />
       <Grid item md={5}>
         <MovieShowtimes movieID={movieID} movieTitle={movie.title} />
       </Grid>
