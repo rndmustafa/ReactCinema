@@ -38,10 +38,10 @@ function Home(props) {
   const [searchFilter, setSearchFilter] = useState('');
   return (
     <div className={classes.flexCol} >
-      <Typography variant='h4' gutterBottom>What's Showing</Typography>
+      <Typography variant='h4' style={{ marginBottom: 8 }}>What's Showing</Typography>
       <form noValidate className={classes.form} onSubmit={e => e.preventDefault()} >
         <div className={classes.flexRow}>
-          <DateRange fontSize='large' style={{ marginRight: 8, marginBottom: 16 }} />
+          <DateRange fontSize='large' style={{ marginRight: 8 }} />
           <TextField
             id='date'
             type='date'
