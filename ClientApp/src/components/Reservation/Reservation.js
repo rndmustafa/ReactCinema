@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Loading from '../../util/Loading';
 import FrownIcon from '@material-ui/icons/SentimentDissatisfied';
+import ReservationForm from './ReservationForm';
 
 function Reservation(props) {
   let showtimeID = props.match.params.showtimeID;
@@ -52,11 +53,7 @@ function Reservation(props) {
     );
   }
 
-  return (
-    <Grid container justify='center'>
-      <p>{showtimeID}</p>
-    </Grid>
-    );
+  return <ReservationForm showtime={showtime} />;
 }
 
 export default Reservation;
