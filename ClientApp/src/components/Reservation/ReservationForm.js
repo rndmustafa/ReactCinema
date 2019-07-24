@@ -44,6 +44,9 @@ function ReservationForm(props) {
   const [adultTickets, setAdultTickets] = useState(0);
   const [childTickets, setChildTickets] = useState(0);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({});
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -81,9 +84,17 @@ function ReservationForm(props) {
                 <Typography variant='body1'>${total}</Typography>
                 <span style={{width:96}}/>
               </div>
-              <Button color='secondary' variant='contained' type='submit'>
-                Reserve Ticket
-              </Button>
+              {error.general && (
+                <Typography variant="body1" style={{ color: "red" }}>
+                  {error.general}
+                </Typography>
+              )}
+              {!loading && (
+                <Button color="secondary" variant="contained" type="submit">
+                  Reserve Ticket
+                </Button>
+              )}
+              {loading && <CircularProgress /> }
             </ValidatorForm>
           </Paper>
         </Grid>
