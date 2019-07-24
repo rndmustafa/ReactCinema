@@ -7,6 +7,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import MovieCard from '../Home/MovieCard';
 import Paper from '@material-ui/core/Paper';
+import TicketCounter from './TicketCounter';
 import { fetchCreateItem, fetchPutItem } from '../../util/fetchCalls';
 
 const style = {
@@ -18,18 +19,29 @@ const style = {
     flexDirection: 'column',
     alignItems:'center'
   },
+  flexRow: {
+    display: 'flex',
+    alignItems:'center'
+  },
   paper: {
     padding: 10
   },
   flexSpace: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems:'center',
+    width: '60%'
+  },
+  ticketField: {
+    maxWidth: 45
   }
 };
 
 function ReservationForm(props) {
   const { classes, showtime } = props;
   const [email, setEmail] = useState('');
+  const [adultTickets, setAdultTickets] = useState(0);
+  const [childTickets, setChildTickets] = useState(0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,9 +68,12 @@ function ReservationForm(props) {
                 validators={['required', 'isEmail']}
                 errorMessages={['This field is required', 'Email is not valid']}
               />
+              <Typography variant='body1'>Select your tickets</Typography>
+              <TicketCounter title='Adult' value={adultTickets} setValue={setAdultTickets} />
+              <TicketCounter title='Child' value={childTickets} setValue={setChildTickets} />
               <Button color='secondary' variant='contained' type='submit'>
                 Reserve Ticket
-          </Button>
+              </Button>
             </ValidatorForm>
           </Paper>
         </Grid>
