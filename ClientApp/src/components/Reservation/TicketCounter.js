@@ -14,16 +14,17 @@ const style = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '60%'
+    width: '70%'
   }
 };
 
 function TicketCounter(props) {
-  const { classes, title, value, setValue } = props;
+  const { classes, title, value, setValue, price } = props;
 
   return (
     <div className={classes.flexSpace}>
-      <Typography variant='body1'>{value} x {title}</Typography>
+      <Typography variant='body1' style={{ width: 74 }}>{value} x {title}</Typography>
+      <Typography variant='body1'>${value*price}</Typography>
       <div className={classes.flexRow}>
         <IconButton onClick={() => setValue(value + 1)}>
           <AddIcon />

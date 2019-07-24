@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import MovieCard from '../Home/MovieCard';
 import Paper from '@material-ui/core/Paper';
 import TicketCounter from './TicketCounter';
+import TicketPrices from '../../util/TicketPrices';
 import { fetchCreateItem, fetchPutItem } from '../../util/fetchCalls';
 
 const style = {
@@ -19,21 +20,20 @@ const style = {
     flexDirection: 'column',
     alignItems:'center'
   },
-  flexRow: {
-    display: 'flex',
-    alignItems:'center'
-  },
   paper: {
     padding: 10
   },
   flexSpace: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems:'center',
-    width: '60%'
+    width: '70%'
   },
-  ticketField: {
-    maxWidth: 45
+  ticketContainer: {
+    borderTop: '1px solid rgba(190,190,190,0.4)',
+    borderBottom: '1px solid rgba(190,190,190,0.4)',
+    width: '100%',
+    marginTop: 5,
+    marginBottom: 5
   }
 };
 
@@ -47,6 +47,7 @@ function ReservationForm(props) {
     e.preventDefault();
   };
 
+  let total = adultTickets * TicketPrices.adult + childTickets * TicketPrices.child;
   return (
     <div className={classes.flexCol}>
       <Grid container justify='center' className={classes.grid}>
@@ -69,8 +70,15 @@ function ReservationForm(props) {
                 errorMessages={['This field is required', 'Email is not valid']}
               />
               <Typography variant='body1'>Select your tickets</Typography>
-              <TicketCounter title='Adult' value={adultTickets} setValue={setAdultTickets} />
-              <TicketCounter title='Child' value={childTickets} setValue={setChildTickets} />
+              <div className={`${classes.ticketContainer} ${classes.flexCol}`}>
+                <TicketCounter title='Adult' price={TicketPrices.adult} value={adultTickets} setValue={setAdultTickets} />
+                <TicketCounter title='Child' price={TicketPrices.child} value={childTickets} setValue={setChildTickets} />
+              </div>
+              <div className={classes.flexSpace} style={{ marginBottom:5 }}>
+                <Typography variant='body1' style={{width:74}}>Total</Typography>
+                <Typography variant='body1'>${total}</Typography>
+                <span style={{width:96}}/>
+              </div>
               <Button color='secondary' variant='contained' type='submit'>
                 Reserve Ticket
               </Button>
