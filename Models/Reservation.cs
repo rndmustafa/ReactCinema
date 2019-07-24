@@ -9,6 +9,8 @@ namespace ReactCinema.Models
     {
         public int ReservationID { get; set; }
         public int ShowtimeID { get; set; }
+        public string Type { get; set; }
+        public string Email { get; set; }
 
         public virtual ICollection<Seat> Seats { get; set; }
         public virtual Showtime Showtime { get; set; }
