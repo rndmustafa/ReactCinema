@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using ReactCinema.Data;
 using ReactCinema.Models;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace ReactCinema.Controllers
 {
     [Route("api/[controller]")]
