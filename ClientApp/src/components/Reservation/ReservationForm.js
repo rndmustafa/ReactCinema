@@ -9,6 +9,7 @@ import MovieCard from '../Home/MovieCard';
 import Paper from '@material-ui/core/Paper';
 import TicketCounter from './TicketCounter';
 import TicketPrices from '../../util/TicketPrices';
+import moment from 'moment';
 import { fetchCreateItem, fetchPutItem } from '../../util/fetchCalls';
 
 const style = {
@@ -57,6 +58,7 @@ function ReservationForm(props) {
         <Grid item md>
           <Paper className={classes.paper}>
             <ValidatorForm className={classes.flexCol} onSubmit={e => handleSubmit(e)}>
+              <Typography variant='h5' gutterBottom>{moment(showtime.startTime).format('MMMM Do YYYY, h:mm a')}</Typography>
               <Typography variant='body1'>Email my ticket to: </Typography>
               <TextValidator
                 id='email'
