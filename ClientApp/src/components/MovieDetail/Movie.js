@@ -7,11 +7,13 @@ import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
 import TrailerModal from './TrailerModal';
 import Loading from '../../util/Loading';
 import MovieShowtimes from './MovieShowtimes';
+import MovieInfo from './MovieInfo';
 
 const style = {
   image: {
-    maxWidth: 346,
-    maxHeight: 534
+    width: '100%',
+    height: 'auto',
+    maxWidth: 325
   }
 };
 
@@ -36,30 +38,14 @@ function Movie(props) {
   }
 
   return (
-    <Grid container spacing={40} justify='center'>
-      <Grid item md={7} container>
-        <Grid item sm={5}>
-          <img src={movie.imageUrl} alt={movie.title} className={classes.image} />
-          <TrailerModal open={modalOpen} onClose={() => setModalOpen(false)}
-            trailerUrl={movie.trailerUrl} movieTitle={movie.title} />
-        </Grid>
-        <Grid item sm={7}>
-          <Typography variant='subtitle2' gutterBottom>Rating:
-              <Typography variant='body2' inline> {movie.rating}</Typography>
-          </Typography>
-          <Typography variant='subtitle2' gutterBottom>Duration:
-              <Typography variant='body2' inline> {movie.duration}m</Typography>
-          </Typography>
-          <Typography variant='subtitle2' gutterBottom>Synopsis:
-              <Typography variant='body2' inline> {movie.synopsis}</Typography>
-          </Typography>
-          <Button variant='contained' color='default' onClick={() => setModalOpen(true)}>
-            <PlayCircleOutline fontSize='large' />
-            Watch Trailer
-            </Button>
-        </Grid>
+    <Grid container justify='center'>
+      <Grid item lg={3}>
+        <img src={movie.imageUrl} alt={movie.title} className={classes.image} />
       </Grid>
-      <Grid item md={5}>
+      <Grid item lg={4}>
+        <MovieInfo movie={movie} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      </Grid>
+      <Grid item lg={5}>
         <MovieShowtimes movieID={movieID} movieTitle={movie.title} />
       </Grid>
     </Grid>
