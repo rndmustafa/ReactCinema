@@ -50,8 +50,6 @@ export default class Auth {
       .then(data => {
         data.roles = data[claimsKey + 'roles'];
         data.permissions = data[claimsKey + 'permissions'];
-        delete data[claimsKey + 'roles'];
-        delete data[claimsKey + 'permissions'];
         setUserData({ ...data, authenticated:true });
         setLoading(false);
       });
@@ -59,7 +57,7 @@ export default class Auth {
 
   renewSession(setUserData, setLoading) {
     console.log('renewsession');
-    this.auth0.checkSession(auth0Settings, (err, authResult) => {
+    this.auth0.checkSession({}, (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         console.log('renewing session');
         this.setSession(authResult, setUserData, setLoading);
