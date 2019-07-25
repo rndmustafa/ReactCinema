@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import TicketCounter from './TicketCounter';
 import TicketPrices from '../../util/TicketPrices';
 import moment from 'moment';
-import { fetchCreateItem, fetchPutItem } from '../../util/fetchCalls';
+import ReservationMade from './ReservationMade';
 
 const style = {
   grid: {
@@ -46,10 +46,29 @@ function ReservationForm(props) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
+  const [success, setSuccess] = useState(false);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
+    fetch(`api/reservation?email=${email}&adultTickets=${adultTickets}
+           &childTickets=${childTickets}&showtimeID=${showtime.showtimeID}`,
+      { method: 'POST' })
+      .then(res => {
+        setLoading(false);
+        if (res.ok) {
+          setSuccess(true);
+        }
+        else {
+          res.json().then(data => setError(data));
+        }
+      });
   };
+
+  if (success) {
+    return <ReservationMade movieTitle={showtime.movie.title} date={showtime.startTime} />;
+  }
 
   let total = adultTickets * TicketPrices.adult + childTickets * TicketPrices.child;
   return (
