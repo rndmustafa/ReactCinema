@@ -30,6 +30,10 @@ const theme = createMuiTheme({
       backgroundColor: "rgb(221,221,221)"
     },
     transition: "background-color 0.35s"
+  },
+  paper: {
+    padding: 10,
+    borderTop: '3px solid #468'
   }
 });
 

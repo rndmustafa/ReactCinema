@@ -12,7 +12,7 @@ import TicketPrices from '../../util/TicketPrices';
 import moment from 'moment';
 import ReservationMade from './ReservationMade';
 
-const style = {
+const style = (theme) => ({
   grid: {
     maxWidth: 800
   },
@@ -21,9 +21,7 @@ const style = {
     flexDirection: 'column',
     alignItems:'center'
   },
-  paper: {
-    padding: 10
-  },
+  paper: theme.paper,
   flexSpace: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -36,7 +34,7 @@ const style = {
     marginTop: 5,
     marginBottom: 5
   }
-};
+});
 
 function ReservationForm(props) {
   const { classes, showtime } = props;
