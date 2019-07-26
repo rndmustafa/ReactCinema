@@ -5,6 +5,10 @@ Adjust connection strings and Auth0 settings for production environment
 Add experiences to Room Form
   Adjust showtimegroup form so only experiences associated with 
   room can be selected
+too much whitespace on movie edit form
+entry margin
+reset errors on showtime form
+creation speed sg
 
 Finished:
 ShowtimeGroup.cs: Check for scheduling conflicts with other movies
@@ -21,3 +25,4 @@ Create reserve ticket pages
 Fix issues with responsiveness
 Finish Movie Detail Page
 Admin Info Bar
+MovieCard doesn't line up with form on reservation page

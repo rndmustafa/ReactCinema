@@ -45,7 +45,7 @@ function MovieGrid(props) {
           </Typography>
         </div>
       )}  
-      {filteredData.map(movie => <MovieCard key={movie.movieID} movie={movie}/>)}
+      {filteredData.map(movie => <MovieCard key={movie.movieID} margin={10} movie={movie}/>)}
     </div>
   );
 }

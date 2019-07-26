@@ -9,8 +9,7 @@ import { Link } from 'react-router-dom';
 
 const style = {
   card: {
-    width: 290,
-    margin: '10px'
+    width: 290
   },
   media: {
     height: 408
@@ -18,7 +17,7 @@ const style = {
 };
 
 function MovieCard(props) {
-  const { classes, movie } = props;
+  const { classes, movie, margin: pMargin } = props;
 
   const shortenSynopsis = (synopsis) => {
     if (synopsis.length > 260) {
@@ -28,7 +27,7 @@ function MovieCard(props) {
   };
 
   return (
-    <Card className={classes.card} key={movie.movieID}>
+    <Card className={classes.card} style={{margin: pMargin}} key={movie.movieID}>
       <CardActionArea>
         <CardMedia
           className={classes.media}
