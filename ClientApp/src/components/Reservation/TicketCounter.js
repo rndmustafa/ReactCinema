@@ -26,11 +26,11 @@ function TicketCounter(props) {
       <Typography variant='body1' style={{ width: 74 }}>{value} x {title}</Typography>
       <Typography variant='body1'>${value*price}</Typography>
       <div className={classes.flexRow}>
-        <IconButton onClick={() => setValue(value + 1)}>
-          <AddIcon />
-        </IconButton>
         <IconButton disabled={value === 0} onClick={() => setValue(value - 1)}>
           <MinusIcon />
+        </IconButton>
+        <IconButton onClick={() => setValue(value + 1)}>
+          <AddIcon />
         </IconButton>
       </div>
     </div>

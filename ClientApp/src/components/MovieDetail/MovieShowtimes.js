@@ -14,7 +14,7 @@ function MovieShowtimes(props) {
   return (
     <div>
       <Typography variant='h5' align='center' gutterBottom>
-        Book tickets for {movieTitle}
+        Book Tickets for {movieTitle}
       </Typography>
       {showtimeDates.map(date => <ShowtimeSection key={date} date={date} movieID={movieID} />)}
     </div>
