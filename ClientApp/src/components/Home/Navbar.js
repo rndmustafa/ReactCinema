@@ -10,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 const styles = {
   bar: {
     display: "flex",
-    justifyContent: "space-between"
+    justifyContent:'center'
   },
   menu: {
     top: "35px",
@@ -26,7 +26,6 @@ function Navbar(props) {
   return (
     <AppBar position="static">
       <Toolbar className={classes.bar}>
-        <div/>
         <div>
           <Button color="inherit" component={Link} to="/">Home</Button>
           {
