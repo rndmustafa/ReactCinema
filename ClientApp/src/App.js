@@ -8,6 +8,7 @@ import Loading from './util/Loading';
 import AuthRoute from './util/AuthRoute';
 import Dashboard from './components/Dashboard/Dashboard';
 import Reservation from './components/Reservation/Reservation';
+import InfoBar from './InfoBar';
 
 const theme = createMuiTheme({
   typography: {
@@ -42,6 +43,7 @@ function App(props) {
   let initialUser = { authenticated: false, roles: [], permissions: [] };
   const [userData, setUserData] = useState(initialUser);
   const [loading, setLoading] = useState(true);
+  const [infoBar, setInfoBar] = useState(true);
 
   useEffect(() => {
     if (/access_token|id_token|error/.test(window.location.hash)) {
@@ -66,6 +68,7 @@ function App(props) {
   return (
     <MuiThemeProvider theme={theme}>
       <Navbar userData={userData} auth={auth} setUserData={setUserData} setLoading={setLoading} />
+      {!userData.roles.includes('Admin') && infoBar && <InfoBar setInfoBar={setInfoBar} />}
       <div className='container'>
         <Route exact path='/' component={Home} />
         <Route path={'/movie/:id'} component={Movie} />

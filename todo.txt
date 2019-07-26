@@ -1,8 +1,6 @@
 ﻿Auth.js, 60: Debug renewing auth issue
 ShowtimeForm.js, 123: Possibly remove the need for setRelatedFields
-Finish Movie Detail Page
 Add Pagination
-Admin Info Page
 Adjust connection strings and Auth0 settings for production environment
 Add experiences to Room Form
   Adjust showtimegroup form so only experiences associated with 
@@ -21,3 +19,5 @@ validate fields
 ShowtimeGroup.cs, 125: Implemented UpdateEntries function. Will need to check if deleted showtimes have reservations.
 Create reserve ticket pages
 Fix issues with responsiveness
+Finish Movie Detail Page
+Admin Info Bar
