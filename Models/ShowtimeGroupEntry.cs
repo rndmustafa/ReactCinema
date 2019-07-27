@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -101,6 +102,15 @@ namespace ReactCinema.Models
                 return true;
             }
             return false;
+        }
+
+        public string FormatStartTime
+        {
+            get
+            {
+                return DateTime.ParseExact(StartTime, "HH:mm", CultureInfo.InvariantCulture)
+                    .ToString("h:mm tt", CultureInfo.InvariantCulture);
+            }
         }
     }
 }

@@ -6,9 +6,9 @@ Add experiences to Room Form
   Adjust showtimegroup form so only experiences associated with 
   room can be selected
 too much whitespace on movie edit form
-entry margin
-reset errors on showtime form
 creation speed sg
+Form Modal responsiveness
+Youtube Embed Url Clarification
 
 Finished:
 ShowtimeGroup.cs: Check for scheduling conflicts with other movies
@@ -26,3 +26,5 @@ Fix issues with responsiveness
 Finish Movie Detail Page
 Admin Info Bar
 MovieCard doesn't line up with form on reservation page
+inconsistent spacing in showtime form
+Reset errors on showtime form

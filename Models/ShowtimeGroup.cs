@@ -53,14 +53,9 @@ namespace ReactCinema.Models
                 }
                 else if(orderedEntries[i].Conflicts(orderedEntries[i+1], Movie.Duration))
                 {
-                    errors.Add(orderedEntries[i].ShortIdentification, "This overlaps with the next entry in the same room.");
+                    errors.Add("general", $"Showtime {orderedEntries[i].FormatStartTime} overlaps with {orderedEntries[i+1].FormatStartTime}.");
+                    return true;
                 }
-            }
-
-            if(errors.Count > 0)
-            {
-                errors.Add("general", "Scheduling conflicts found, please make sure entries don't overlap with each other.");
-                return true;
             }
 
             foreach (ShowtimeGroupEntry entry in ShowtimeGroupEntries)

@@ -93,13 +93,6 @@ function ShowtimeForm(props) {
   const handleEntryChange = (field, index, event) => {
     let newEntries = [...entries];
     newEntries[index][field] = event.target.value;
-
-    let shortId = newEntries[index].shortIdentification;
-    if (error[shortId]) {
-      let newError = { ...error, [shortId]:'' };
-      setError(newError);
-    }
-  
     setEntries(newEntries);
   };
 
@@ -246,8 +239,7 @@ function ShowtimeForm(props) {
           {entries.map((entry, index) => (
             <div className={classes.flexRow} key={entry.shortIdentification}>
               <TextField
-                error={entry.startTime.length === 0 ||
-                  (entry.shortIdentification in error && error[entry.shortIdentification] !== '')}
+                error={entry.startTime.length === 0}
                 id='startTime'
                 type='time'
                 label='Start Time'
