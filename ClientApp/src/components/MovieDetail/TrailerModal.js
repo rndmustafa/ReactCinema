@@ -2,7 +2,6 @@
 import Modal from '@material-ui/core/Modal';
 import { withStyles } from '@material-ui/core/styles';
 
-
 const style = {
   frame: {
     position: 'absolute',
@@ -19,8 +18,8 @@ function TrailerModal(props) {
     <Modal open={open} onClose={handleClose} aria-labelledby='Trailer'>
       <div  className={classes.frame}>
         <iframe
-          width='1000'
-          height='562'
+          width='560'
+          height='315'
           src={trailerUrl}
           frameBorder='0'
           allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
