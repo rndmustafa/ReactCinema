@@ -29,7 +29,7 @@ function Navbar(props) {
         <div>
           <Button color="inherit" component={Link} to="/">Home</Button>
           {
-            isAuthenticated && isAdmin && (<Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>)
+            isAuthenticated && isAdmin && (<Button color="inherit" component={Link} to="/dashboard/movies">Dashboard</Button>)
           }
         </div>
         <div>

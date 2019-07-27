@@ -56,7 +56,7 @@ function Dashboard(props) {
         </Grid>
         <Grid item md={9}>
           <Paper className={classes.paper}>
-            <Route exact path={[`${match.path}/movies`, `${match.path}`]} component={MovieList} />
+            <Route exact path={`${match.path}/movies`} component={MovieList} />
             <Route path={`${match.path}/movies/:movieID`} component={MovieEdit} />
             <Route path={`${match.path}/rooms`} component={RoomList} />
             <Route path={`${match.path}/experiences`} component={ExperienceList} />
