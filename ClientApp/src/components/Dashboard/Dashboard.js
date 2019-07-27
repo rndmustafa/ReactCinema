@@ -13,7 +13,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MovieIcon from '@material-ui/icons/Movie';
 import LocalPlayIcon from '@material-ui/icons/LocalPlay';
 import StarIcon from '@material-ui/icons/Star';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 
 const style = (theme) => ({
@@ -30,8 +29,8 @@ function Dashboard(props) {
 
   return (
     <div className={classes.flexCol}>
-      <Grid container direction="row" justify="center" spacing={24} style={{ maxWidth: 1200 }}>
-        <Grid item sm={3}>
+      <Grid container direction="row" justify="center" spacing={24} style={{ maxWidth: 900 }}>
+        <Grid item md={3}>
           <Paper className={classes.paper}>
             <List component="nav">
               <ListItem button component={Link} to={`${match.url}/movies`}>
@@ -55,19 +54,9 @@ function Dashboard(props) {
             </List>
           </Paper>
         </Grid>
-        <Grid item sm={9}>
+        <Grid item md={9}>
           <Paper className={classes.paper}>
-            <Route exact path={`${match.path}`} render={() => {
-              return (
-                <div>
-                  <Typography variant="h4" gutterBottom>Dashboard</Typography>
-                  <Typography variant="body1">
-                    Welcome to your dashboard. Please click the navigational links
-                    in order to configure the application.
-                </Typography>
-                </div>);
-              }} />
-            <Route exact path={`${match.path}/movies`} component={MovieList} />
+            <Route exact path={[`${match.path}/movies`, `${match.path}`]} component={MovieList} />
             <Route path={`${match.path}/movies/:movieID`} component={MovieEdit} />
             <Route path={`${match.path}/rooms`} component={RoomList} />
             <Route path={`${match.path}/experiences`} component={ExperienceList} />
