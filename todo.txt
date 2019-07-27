@@ -7,8 +7,6 @@ Add experiences to Room Form
   room can be selected
 too much whitespace on movie edit form
 creation speed sg
-Form Modal responsiveness
-Youtube Embed Url Clarification
 
 Finished:
 ShowtimeGroup.cs: Check for scheduling conflicts with other movies
@@ -28,3 +26,4 @@ Admin Info Bar
 MovieCard doesn't line up with form on reservation page
 inconsistent spacing in showtime form
 Reset errors on showtime form
+Youtube Embed Url Clarification

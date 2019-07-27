@@ -135,7 +135,7 @@ function MovieForm(props) {
         variant='outlined' />
       <TextValidator
         id='trailerUrl'
-        label='Trailer Url'
+        label='Embedded Trailer Url'
         value={trailerUrl}
         onChange={(e) => setTrailerUrl(e.target.value)}
         validators={['required', 'matchRegexp:^https?:\/\/.*']}
