@@ -96,7 +96,7 @@ function ShowtimeForm(props) {
 
     let shortId = newEntries[index].shortIdentification;
     if (error[shortId]) {
-      let newError = { ...error, shortId:'' };
+      let newError = { ...error, [shortId]:'' };
       setError(newError);
     }
   
@@ -249,8 +249,8 @@ function ShowtimeForm(props) {
                 error={entry.startTime.length === 0 ||
                   (entry.shortIdentification in error && error[entry.shortIdentification] !== '')}
                 id='startTime'
-                label={index === 0 ? 'Start Time' : ''}
                 type='time'
+                label='Start Time'
                 style={{ marginRight: '10px', minWidth:'102px' }}
                 value={entry.startTime}
                 onChange={e => handleEntryChange('startTime', index, e)}
@@ -261,7 +261,7 @@ function ShowtimeForm(props) {
                   step: 60,
                 }} />
               <FormControl required style={{ marginRight: '15px', minWidth: 90 }}>
-                {index === 0 && <InputLabel htmlFor="room-required">Room</InputLabel>}
+                <InputLabel htmlFor="room-required">Room</InputLabel>
                 <Select
                   value={entry.roomID}
                   error={entry.roomID === -1}
@@ -275,7 +275,7 @@ function ShowtimeForm(props) {
                 </Select>
               </FormControl>
               <FormControl required style={{ minWidth: 120 }}>
-                {index === 0 && <InputLabel htmlFor="experience-required">Experience</InputLabel>}
+                <InputLabel htmlFor="room-required">Experience</InputLabel>
                 <Select
                   value={entry.experienceID}
                   error={entry.experienceID === -1}
