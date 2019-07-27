@@ -195,6 +195,7 @@ namespace ReactCinema.Controllers
                 group.UpdateEntries(UpdatedGroup);
                 await _context.SaveChangesAsync();
 
+                group.Movie = null;
                 foreach(ShowtimeGroupEntry entry in group.ShowtimeGroupEntries)
                 {
                     entry.Showtimes = null;
@@ -219,6 +220,12 @@ namespace ReactCinema.Controllers
                 showtimeGroup.GenerateShowtimes(_context);
                 _context.ShowtimeGroups.Add(showtimeGroup);
                 await _context.SaveChangesAsync();
+
+                showtimeGroup.Movie = null;
+                foreach(ShowtimeGroupEntry entry in showtimeGroup.ShowtimeGroupEntries)
+                {
+                    entry.Showtimes = null;
+                }
                 return CreatedAtRoute("GetShowtimeGroup", new { id = showtimeGroup.ShowtimeGroupID }, showtimeGroup);
             }
             return BadRequest(errors);

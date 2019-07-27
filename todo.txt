@@ -5,7 +5,6 @@ Adjust connection strings and Auth0 settings for production environment
 Add experiences to Room Form
   Adjust showtimegroup form so only experiences associated with 
   room can be selected
-creation speed sg
 
 Finished:
 ShowtimeGroup.cs: Check for scheduling conflicts with other movies
@@ -27,3 +26,4 @@ inconsistent spacing in showtime form
 Reset errors on showtime form
 Youtube Embed Url Clarification
 too much whitespace on movie edit form
+creation speed sg
