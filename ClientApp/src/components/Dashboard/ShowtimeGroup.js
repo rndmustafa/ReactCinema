@@ -49,7 +49,7 @@ function ShowtimeGroup(props) {
           ))}
         </div>
       </div>
-      <div>
+      <div style={{ display: 'flex' }}>
         <IconButton onClick={() => handleEditDialogOpen(groupData)}>
           <EditIcon />
         </IconButton>
