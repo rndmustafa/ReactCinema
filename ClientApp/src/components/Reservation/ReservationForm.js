@@ -71,7 +71,7 @@ function ReservationForm(props) {
   let total = adultTickets * TicketPrices.adult + childTickets * TicketPrices.child;
   return (
     <div className={classes.flexCol}>
-      <Grid container justify='center' className={classes.grid}>
+      <Grid container justify='center' spacing={16} className={classes.grid}>
         <Grid item md>
           <MovieCard movie={showtime.movie} />
         </Grid>
