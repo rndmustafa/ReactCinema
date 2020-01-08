@@ -7,7 +7,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import WarnDeleteDialog from '../../util/WarnDeleteDialog';
 import FormDialog from '../../util/FormDialog';
 import ExperienceForm from './ExperienceForm';
-import withFormHandlers from '../../util/withFormHandlers';
+import useFormHandlers from '../../util/useFormHandlers';
 import DashboardHeader from './DashboardHeader';
 
 const style = (theme) => ({
@@ -15,11 +15,14 @@ const style = (theme) => ({
 });
 
 function ExperienceList(props) {
-  const { classes, formDialog,
+  const { classes } = props;
+
+  let formHandlers = useFormHandlers({ itemIDKey: 'experienceID' });
+  const { formDialog,
     deleteDialog, selectedData, handleEditDialogOpen,
     handleAddDialogOpen, handleDeleteDialogOpen,
-    handleItemAdd, handleItemDelete, handleItemUpdate, 
-    setFormDialog, setDeleteDialog } = props;
+    handleItemAdd, handleItemDelete, handleItemUpdate,
+    setFormDialog, setDeleteDialog } = formHandlers;
 
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -66,4 +69,4 @@ function ExperienceList(props) {
   );
 }
 
-export default withStyles(style)(withFormHandlers(ExperienceList, { itemIDKey: 'experienceID' }));
+export default withStyles(style)(ExperienceList);

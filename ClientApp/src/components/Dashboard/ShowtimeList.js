@@ -5,14 +5,15 @@ import FormDialog from '../../util/FormDialog';
 import ShowtimeForm from './ShowtimeForm';
 import ShowtimeGroup from './ShowtimeGroup';
 import WarnDeleteDialog from '../../util/WarnDeleteDialog';
-import withFormHandlers from '../../util/withFormHandlers';
+import useFormHandlers from '../../util/useFormHandlers';
 
 function ShowtimeList(props) {
-  const { movieID, formDialog,
-    deleteDialog, selectedData, handleEditDialogOpen,
+  let formHandlers = useFormHandlers({ itemIDKey: 'showtimeGroupID' });
+  const { movieID } = props;
+  const { formDialog, deleteDialog, selectedData, handleEditDialogOpen,
     handleAddDialogOpen, handleDeleteDialogOpen,
     handleItemAdd, handleItemDelete, handleItemUpdate,
-    setFormDialog, setDeleteDialog } = props;
+    setFormDialog, setDeleteDialog } = formHandlers;
 
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -50,4 +51,4 @@ function ShowtimeList(props) {
   );
 }
 
-export default withFormHandlers(ShowtimeList, { itemIDKey: 'showtimeGroupID'});
+export default ShowtimeList;

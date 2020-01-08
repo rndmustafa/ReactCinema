@@ -7,7 +7,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import WarnDeleteDialog from '../../util/WarnDeleteDialog';
 import FormDialog from '../../util/FormDialog';
 import RoomForm from './RoomForm';
-import withFormHandlers from '../../util/withFormHandlers';
+import useFormHandlers from '../../util/useFormHandlers';
 import DashboardHeader from './DashboardHeader';
 
 const style = (theme) => ({
@@ -15,11 +15,12 @@ const style = (theme) => ({
 });
 
 function RoomList(props) {
-  const { classes, formDialog,
-    deleteDialog, selectedData, handleEditDialogOpen,
+  let formHandlers = useFormHandlers({ itemIDKey: 'roomID' });
+  const { classes } = props;
+  const { formDialog, deleteDialog, selectedData, handleEditDialogOpen,
     handleAddDialogOpen, handleDeleteDialogOpen,
     handleItemAdd, handleItemDelete, handleItemUpdate,
-    setFormDialog, setDeleteDialog } = props;
+    setFormDialog, setDeleteDialog } = formHandlers;
 
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -66,4 +67,4 @@ function RoomList(props) {
   );
 }
 
-export default withStyles(style)(withFormHandlers(RoomList, { itemIDKey: 'roomID' }));
+export default withStyles(style)(RoomList);

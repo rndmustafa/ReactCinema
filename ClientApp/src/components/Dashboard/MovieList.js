@@ -8,7 +8,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import WarnDeleteDialog from '../../util/WarnDeleteDialog';
 import FormDialog from '../../util/FormDialog';
 import MovieForm from './MovieForm';
-import withFormHandlers from '../../util/withFormHandlers';
+import useFormHandlers from '../../util/useFormHandlers';
 import DashboardHeader from './DashboardHeader';
 
 const style = (theme) => ({
@@ -16,10 +16,13 @@ const style = (theme) => ({
 });
 
 function MovieList(props) {
-  const { classes, formDialog, deleteDialog,
+  const { classes } = props;
+
+  let formHandlers = useFormHandlers({ itemIDKey: 'movieID' });
+  const { formDialog, deleteDialog,
     selectedData,handleAddDialogOpen, handleDeleteDialogOpen,
     handleItemAdd, handleItemDelete, setFormDialog,
-    setDeleteDialog } = props;
+    setDeleteDialog } = formHandlers;
 
   const [movies, setMovies] = useState([]);
   useEffect(() => {
@@ -68,4 +71,4 @@ function MovieList(props) {
   );
 }
 
-export default withStyles(style)(withFormHandlers(MovieList, { itemIDKey: 'movieID' }));
+export default withStyles(style)(MovieList);
